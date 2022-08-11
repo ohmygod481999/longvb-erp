@@ -1,9 +1,9 @@
 import { ReactiveVar } from "@apollo/client";
-import { authState } from "./index.ts";
+import { authState } from ".";
 import { Auth } from "../../models/auth.model";
-import { constants } from "../../Components/constants/index.ts";
+import { constants } from "../../Components/constants";
 
-function createUpdateAuth(authState: ReactiveVar<Auth>) {
+function createUpdateAuth(authState: ReactiveVar<Auth | null>) {
     return (userId: string, company_id: number) => {
         const auth = authState();
         authState({
@@ -15,8 +15,8 @@ function createUpdateAuth(authState: ReactiveVar<Auth>) {
     };
 }
 
-function createLogin(authState: ReactiveVar<Auth>) {
-    return (email: string, password: string, history) => {
+function createLogin(authState: ReactiveVar<Auth | null>) {
+    return (email: string, password: string, history: any) => {
         const auth = authState();
         // get user info from server
         authState({
@@ -30,8 +30,8 @@ function createLogin(authState: ReactiveVar<Auth>) {
     };
 }
 
-function createLogout(authState: ReactiveVar<Auth>) {
-    return (history) => {
+function createLogout(authState: ReactiveVar<Auth | null>) {
+    return (history: any) => {
         const auth = authState();
         // get user info from server
         authState(null);

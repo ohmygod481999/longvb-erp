@@ -20,9 +20,13 @@ import Logout from "../pages/Authentication/Logout";
 
 // User Profile
 import UserProfile from "../pages/Authentication/user-profile";
+import ListBranch from "../pages/Restaurant/Branch/ListBranch";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardEcommerce },
+
+
+  { path: "/restaurant/branch", component: ListBranch },
 
   //User Profile
   { path: "/profile", component: UserProfile },

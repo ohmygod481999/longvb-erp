@@ -169,6 +169,7 @@
     "moment": "2.29.1"
   },
   "devDependencies": {
+    "@types/react-router-dom": "^5.3.3",
     "babel-plugin-prismjs": "^2.1.0"
   }
 }

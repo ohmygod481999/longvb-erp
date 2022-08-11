@@ -1,5 +1,5 @@
 import { InMemoryCache } from "@apollo/client";
-import { authState } from "./auth/index.ts";
+import { authState } from "./auth/index";
 
 export const cache: InMemoryCache = new InMemoryCache({
     typePolicies: {

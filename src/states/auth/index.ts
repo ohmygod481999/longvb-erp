@@ -3,4 +3,4 @@ import { Auth } from "../../models/auth.model";
 
 const authInitialValue = null;
 
-export const authState: ReactiveVar<Auth> = makeVar<Auth>(authInitialValue);
+export const authState: ReactiveVar<Auth | null> = makeVar<Auth | null>(authInitialValue);

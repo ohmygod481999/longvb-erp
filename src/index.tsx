@@ -1,22 +1,23 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
 
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 
 import { configureStore } from "./store";
 
+// @ts-ignore
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <Provider store={configureStore({})}>
     <React.Fragment>
-      <BrowserRouter basename={process.env.PUBLIC_URL}>
-        <App />
-      </BrowserRouter>
+        <Provider store={configureStore({})}>
+            <BrowserRouter basename={process.env.PUBLIC_URL}>
+                <App />
+            </BrowserRouter>
+        </Provider>
     </React.Fragment>
-  </Provider>
 );
 
 // If you want to start measuring performance in your app, pass a function

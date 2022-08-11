@@ -9,8 +9,6 @@ import { useAuth } from "../Components/Hooks/AuthHooks.ts";
 const AuthProtected = (props) => {
     const { isLoggedIn } = useAuth();
 
-    console.log(isLoggedIn)
-
     if (isLoggedIn === null) {
         return <div>Loading...</div>
     }

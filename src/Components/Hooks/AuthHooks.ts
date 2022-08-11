@@ -1,22 +1,18 @@
 import { useQuery } from "@apollo/client";
 import { useEffect, useMemo, useState } from "react";
 import { getLoggedinUser } from "../../helpers/api_helper";
-import { GET_AUTH } from "../../states/auth/auth.queries.ts";
-import { Auth } from "../../models/auth.model.ts";
-import { constants } from "../constants/index.ts";
-import { authMutations } from "../../states/auth/auth.mutations.ts";
+import { GET_AUTH } from "../../states/auth/auth.queries";
+import { Auth } from "../../models/auth.model";
+import { constants } from "../constants/index";
+import { authMutations } from "../../states/auth/auth.mutations";
 
 const useAuth = () => {
     const { data } = useQuery<{ auth: Auth }>(GET_AUTH);
 
-    console.log(data.auth);
-
-    // const [loading, setLoading] = useState(true);
-
-    const [isLoggedIn, setIsLoggedIn] = useState(null);
+    const [isLoggedIn, setIsLoggedIn] = useState<Boolean | null>(null);
 
     useEffect(() => {
-        if (data.auth) {
+        if (data && data.auth) {
             setIsLoggedIn(true);
         } else {
             const accessToken = sessionStorage.getItem(constants.AUTH_KEY);
@@ -35,7 +31,7 @@ const useAuth = () => {
     }, [data]);
 
     const isLoggedInasd = useMemo(() => {
-        if (data.auth) return true;
+        if (data?.auth) return true;
         const accessToken = sessionStorage.getItem(constants.AUTH_KEY);
         if (accessToken) {
             // get user info
@@ -51,4 +47,17 @@ const useAuth = () => {
     return { isLoggedIn };
 };
 
-export { useAuth };
+const useProfile = () => {
+    const { data } = useQuery<{ auth: Auth }>(GET_AUTH);
+
+    const userProfile = useMemo(() => {
+        if (data?.auth) {
+            return data.auth.user;
+        }
+        return null;
+    }, [data]);
+
+    return { userProfile };
+};
+
+export { useAuth, useProfile };

@@ -3,49 +3,49 @@ import { useHistory } from "react-router-dom";
 
 enum CurrentState {
     Dashboard,
-    Restaurant
+    Restaurant,
 }
 
 export const useNavdata = () => {
     const history = useHistory();
     //state data
     const [isDashboard, setIsDashboard] = useState(false);
-    const [isRestaurant, setIsRestaurant] = useState(false)
-
+    const [isRestaurant, setIsRestaurant] = useState(false);
 
     // Restaurant
     const [isStore, setIsStore] = useState(false);
 
-    const [iscurrentState, setIscurrentState] = useState<CurrentState>(CurrentState.Dashboard);
+    const [iscurrentState, setIscurrentState] = useState<CurrentState>(
+        CurrentState.Dashboard
+    );
 
-    function updateIconSidebar(e) {
+    function updateIconSidebar(e: any) {
         if (e && e.target && e.target.getAttribute("subitems")) {
             const ul = document.getElementById("two-column-menu");
-            const iconItems = ul.querySelectorAll(".nav-icon.active");
-            let activeIconItems = [...iconItems];
-            activeIconItems.forEach((item) => {
-                item.classList.remove("active");
-                var id = item.getAttribute("subitems");
-                if (document.getElementById(id))
-                    document.getElementById(id).classList.remove("show");
-            });
+            if (ul) {
+                const iconItems = ul.querySelectorAll(".nav-icon.active");
+                // @ts-ignore
+                let activeIconItems = [...iconItems];
+                activeIconItems.forEach((item) => {
+                    item.classList.remove("active");
+                    var id = item.getAttribute("subitems");
+                    if (document.getElementById(id))
+                        // @ts-ignore
+                        document.getElementById(id).classList.remove("show");
+                });
+            }
         }
     }
 
     useEffect(() => {
-        document.body.classList.remove('twocolumn-panel');
+        document.body.classList.remove("twocolumn-panel");
         if (iscurrentState !== CurrentState.Dashboard) {
             setIsDashboard(false);
         }
         if (iscurrentState !== CurrentState.Restaurant) {
             setIsRestaurant(false);
         }
-    }, [
-        history,
-        iscurrentState,
-        isDashboard,
-        isRestaurant
-    ]);
+    }, [history, iscurrentState, isDashboard, isRestaurant]);
 
     const menuItems = [
         {
@@ -58,7 +58,7 @@ export const useNavdata = () => {
             icon: "ri-dashboard-2-line",
             link: "/#",
             stateVariables: isDashboard,
-            click: function (e) {
+            click: function (e: any) {
                 e.preventDefault();
                 setIsDashboard(!isDashboard);
                 setIscurrentState(CurrentState.Dashboard);
@@ -82,7 +82,7 @@ export const useNavdata = () => {
             label: "Quản trị nhà hàng",
             icon: "ri-account-circle-line",
             link: "/#",
-            click: function (e) {
+            click: function (e: any) {
                 e.preventDefault();
                 setIsRestaurant(!isRestaurant);
                 setIscurrentState(CurrentState.Restaurant);
@@ -93,9 +93,9 @@ export const useNavdata = () => {
                 {
                     id: "store",
                     label: "Chi nhánh",
-                    link: "/profile",
+                    link: "/restaurant/branch",
                     isChildItem: false,
-                    click: function (e) {
+                    click: function (e: any) {
                         e.preventDefault();
                         setIsStore(!isStore);
                     },

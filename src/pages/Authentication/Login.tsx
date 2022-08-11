@@ -23,18 +23,19 @@ import { useFormik } from "formik";
 //Social Media Imports
 import { GoogleLogin } from "react-google-login";
 // import TwitterLogin from "react-twitter-auth"
-import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
+// import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
 
 import logoLight from "../../assets/images/logo-light.png";
+// import logoLight from "../../assets/images/logo-light.png";
 //Import config
 import { facebook, google } from "../../config";
 import { useQuery } from "@apollo/client";
-import { GET_AUTH } from "../../states/auth/auth.queries.ts";
-import { authMutations } from "../../states/auth/auth.mutations.ts";
-import { useAuth } from "../../Components/Hooks/AuthHooks.ts";
+import { GET_AUTH } from "../../states/auth/auth.queries";
+import { authMutations } from "../../states/auth/auth.mutations";
+import { useAuth } from "../../Components/Hooks/AuthHooks";
 //import images
 
-const Login = (props) => {
+const Login = (props: any) => {
 
     const [userLogin, setUserLogin] = useState({
         identifier: "longvb@gmail.com",
@@ -272,7 +273,7 @@ const Login = (props) => {
                                                         </h5>
                                                     </div>
                                                     <div>
-                                                        <FacebookLogin
+                                                        // <FacebookLogin
                                                             appId={
                                                                 facebook.APP_ID
                                                             }
