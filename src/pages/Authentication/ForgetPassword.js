@@ -11,8 +11,6 @@ import { withRouter, Link } from "react-router-dom";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 
-// action
-import { userForgetPassword } from "../../store/actions";
 
 // import images
 // import profile from "../../assets/images/bg.png";
@@ -33,14 +31,17 @@ const ForgetPasswordPage = props => {
       email: Yup.string().required("Please Enter Your Email"),
     }),
     onSubmit: (values) => {
-      dispatch(userForgetPassword(values, props.history));
+      alert(values)
+      // dispatch(userForgetPassword(values, props.history));
     }
   });
 
-  const { forgetError, forgetSuccessMsg } = useSelector(state => ({
-    forgetError: state.ForgetPassword.forgetError,
-    forgetSuccessMsg: state.ForgetPassword.forgetSuccessMsg,
-  }));
+  // const { forgetError, forgetSuccessMsg } = useSelector(state => ({
+  //   forgetError: state.ForgetPassword.forgetError,
+  //   forgetSuccessMsg: state.ForgetPassword.forgetSuccessMsg,
+  // }));
+  const forgetError = "Error msg"
+  const forgetSuccessMsg = "forgetSuccessMsg"
 
 document.title ="Reset Password | Velzon - React Admin & Dashboard Template";
   return (

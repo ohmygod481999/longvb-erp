@@ -14,10 +14,9 @@ import Error500 from '../pages/AuthenticationInner/Errors/Error500';
 import Offlinepage from "../pages/AuthenticationInner/Errors/Offlinepage";
 
 //login
-import Login from "../pages/Authentication/Login";
+import Login from "../pages/Authentication/Login.tsx";
 import ForgetPasswordPage from "../pages/Authentication/ForgetPassword";
 import Logout from "../pages/Authentication/Logout";
-import Register from "../pages/Authentication/Register";
 
 // User Profile
 import UserProfile from "../pages/Authentication/user-profile";
@@ -42,7 +41,6 @@ const publicRoutes = [
   { path: "/logout", component: Logout },
   { path: "/login", component: Login },
   { path: "/forgot-password", component: ForgetPasswordPage },
-  { path: "/register", component: Register },
 
   //AuthenticationInner pages
   { path: "/signin", component: BasicSignIn },

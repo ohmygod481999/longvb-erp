@@ -10,14 +10,10 @@ import SalesByLocations from "./SalesByLocations";
 import Section from "./Section";
 import StoreVisits from "./StoreVisits";
 import TopSellers from "./TopSellers";
-import { useProfile } from "../../Components/Hooks/UserHooks";
 
 
 const DashboardEcommerce = () => {
   document.title ="Dashboard | Velzon - React Admin & Dashboard Template";
-
-  const { userProfile, loading, token } = useProfile();
-  console.log(userProfile)
 
   return (
     <React.Fragment>

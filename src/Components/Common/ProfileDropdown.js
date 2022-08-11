@@ -7,18 +7,18 @@ import avatar1 from "../../assets/images/users/avatar-1.jpg";
 
 const ProfileDropdown = () => {
 
-    const { user } = useSelector(state => ({
-        user: state.Profile.user,
-    }));
+    // const { user } = useSelector(state => ({
+    //     user: state.Profile.user,
+    // }));
 
     const [userName, setUserName] = useState("Admin");
 
-    useEffect(() => {
-        if (sessionStorage.getItem("authUser")) {
-            const obj = JSON.parse(sessionStorage.getItem("authUser"));
-            setUserName(user.first_name || obj.data.first_name || "Admin");
-        }
-    }, [userName, user]);
+    // useEffect(() => {
+    //     if (sessionStorage.getItem("authUser")) {
+    //         const obj = JSON.parse(sessionStorage.getItem("authUser"));
+    //         setUserName(user.first_name || obj.data.first_name || "Admin");
+    //     }
+    // }, [userName, user]);
 
     //Dropdown Toggle
     const [isProfileDropdown, setIsProfileDropdown] = useState(false);

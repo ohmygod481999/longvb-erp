@@ -34,11 +34,11 @@ const UserProfile = () => {
 
   const [userName, setUserName] = useState("Admin");
 
-  const { user, success, error } = useSelector(state => ({
-    user: state.Profile.user,
-    success: state.Profile.success,
-    error: state.Profile.error
-  }));
+  const { user, success, error } = {
+    user: {},
+    success: "Success",
+    error: "Error"
+  }
 
   useEffect(() => {
     if (sessionStorage.getItem("authUser")) {
@@ -54,9 +54,9 @@ const UserProfile = () => {
       setemail(obj.data.email);
       setidx(obj.data._id || "1");
 
-      setTimeout(() => {
-        dispatch(resetProfileFlag());
-      }, 3000);
+      // setTimeout(() => {
+      //   dispatch(resetProfileFlag());
+      // }, 3000);
     }
   }, [dispatch, user]);
 
@@ -74,7 +74,7 @@ const UserProfile = () => {
       first_name: Yup.string().required("Please Enter Your UserName"),
     }),
     onSubmit: (values) => {
-      dispatch(editProfile(values));
+      alert(JSON.stringify(values))
     }
   });
 

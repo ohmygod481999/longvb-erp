@@ -3,27 +3,20 @@ import { Card, CardBody, CardHeader, Col, Row } from "reactstrap";
 import { RevenueCharts } from "./DashboardEcommerceCharts";
 import CountUp from "react-countup";
 import { useSelector, useDispatch } from "react-redux";
-import { getRevenueChartsData } from "../../store/dashboardEcommerce/action";
+import { allRevenueData } from "../../common/data";
 
 const Revenue = () => {
   const dispatch = useDispatch();
 
-  const [chartData, setchartData] = useState([]);
-
-  const { revenueData } = useSelector(state => ({
-    revenueData: state.DashboardEcommerce.revenueData
-  }));
-
-  useEffect(() => {
-    setchartData(revenueData);
-  }, [revenueData]);
+  const [chartData, setchartData] = useState(allRevenueData);
 
   const onChangeChartPeriod = pType => {
-    dispatch(getRevenueChartsData(pType));
+    alert("change Period")
+    // dispatch(getRevenueChartsData(pType));
   };
 
   useEffect(() => {
-    dispatch(getRevenueChartsData("all"));
+    // dispatch(getRevenueChartsData("all"));
   }, [dispatch]);
   return (
     <React.Fragment>
