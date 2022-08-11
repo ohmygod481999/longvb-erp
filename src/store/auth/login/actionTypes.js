@@ -1,5 +1,10 @@
+export const GET_LOGIN_FLOW = "GET_LOGIN_FLOW"
+export const GET_LOGIN_FLOW_SUCCESS = "GET_LOGIN_FLOW_SUCCESS"
+export const LOGIN = "LOGIN"
+
 export const LOGIN_USER = "LOGIN_USER"
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS"
+export const LOGIN_ERROR = "LOGIN_ERROR"
 
 export const LOGOUT_USER = "LOGOUT_USER"
 export const LOGOUT_USER_SUCCESS = "LOGOUT_USER_SUCCESS"

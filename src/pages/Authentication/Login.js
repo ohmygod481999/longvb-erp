@@ -1,5 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { Card, CardBody, Col, Container, Input, Label, Row, Button, Form, FormFeedback, Alert } from 'reactstrap';
+import React, { useEffect, useMemo, useState } from "react";
+import {
+    Card,
+    CardBody,
+    Col,
+    Container,
+    Input,
+    Label,
+    Row,
+    Button,
+    Form,
+    FormFeedback,
+    Alert,
+} from "reactstrap";
 import ParticlesAuth from "../AuthenticationInner/ParticlesAuth";
 
 //redux
@@ -16,7 +28,13 @@ import { GoogleLogin } from "react-google-login";
 // import TwitterLogin from "react-twitter-auth"
 import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
 // actions
-import { loginUser, socialLogin, resetLoginFlag } from "../../store/actions";
+import {
+    loginUser,
+    socialLogin,
+    resetLoginFlag,
+    getLoginFlow,
+    login,
+} from "../../store/actions";
 
 import logoLight from "../../assets/images/logo-light.png";
 //Import config
@@ -25,17 +43,40 @@ import { facebook, google } from "../../config";
 
 const Login = (props) => {
     const dispatch = useDispatch();
-    const { user } = useSelector(state => ({
+    const { user } = useSelector((state) => ({
         user: state.Account.user,
     }));
 
+    const { flow } = useSelector((state) => ({
+        flow: state.Login.flow,
+    }));
+
+    const csrf_token = useMemo(() => {
+        if (flow) {
+            let token = null;
+            flow.ui.nodes.forEach((node) => {
+                if (node.attributes.name === "csrf_token") {
+                    token = node.attributes.value;
+                }
+            });
+            return token;
+        }
+        return null;
+    }, [flow]);
+
+    // console.log(flow);
+
     const [userLogin, setUserLogin] = useState([]);
+
+    useEffect(() => {
+        dispatch(getLoginFlow());
+    }, []);
 
     useEffect(() => {
         if (user && user) {
             setUserLogin({
                 email: user.user.email,
-                password: user.user.confirm_password
+                password: user.user.confirm_password,
             });
         }
     }, [user]);
@@ -45,22 +86,29 @@ const Login = (props) => {
         enableReinitialize: true,
 
         initialValues: {
-            email: userLogin.email || "admin@themesbrand.com" || '',
-            password: userLogin.password || "123456" || '',
+            identifier: userLogin.email || "admin@themesbrand.com" || "",
+            password: userLogin.password || "123456" || "",
+            method: "password",
         },
         validationSchema: Yup.object({
-            email: Yup.string().required("Please Enter Your Email"),
+            identifier: Yup.string().required("Please Enter Your Email"),
             password: Yup.string().required("Please Enter Your Password"),
         }),
         onSubmit: (values) => {
-            dispatch(loginUser(values, props.history));
-        }
+            // return console.log(values)
+            // dispatch(loginUser({
+            //     email: "admin@themesbrand.com",
+            //     password: "123456"
+            // }, props.history));
+            dispatch(login(values, flow.id, props.history));
+        },
     });
 
-    const { error } = useSelector(state => ({
+    const { error } = useSelector((state) => ({
         error: state.Login.error,
     }));
 
+    // console.log(error);
 
     const signIn = (res, type) => {
         if (type === "google" && res) {
@@ -83,7 +131,7 @@ const Login = (props) => {
     };
 
     //handleGoogleLoginResponse
-    const googleResponse = response => {
+    const googleResponse = (response) => {
         signIn(response, "google");
     };
 
@@ -91,7 +139,7 @@ const Login = (props) => {
     // const twitterResponse = e => {}
 
     //handleFacebookLoginResponse
-    const facebookResponse = response => {
+    const facebookResponse = (response) => {
         signIn(response, "facebook");
     };
 
@@ -111,11 +159,20 @@ const Login = (props) => {
                             <Col lg={12}>
                                 <div className="text-center mt-sm-5 mb-4 text-white-50">
                                     <div>
-                                        <Link to="/" className="d-inline-block auth-logo">
-                                            <img src={logoLight} alt="" height="20" />
+                                        <Link
+                                            to="/"
+                                            className="d-inline-block auth-logo"
+                                        >
+                                            <img
+                                                src={logoLight}
+                                                alt=""
+                                                height="20"
+                                            />
                                         </Link>
                                     </div>
-                                    <p className="mt-3 fs-15 fw-medium">Premium Admin & Dashboard Template</p>
+                                    <p className="mt-3 fs-15 fw-medium">
+                                        Premium Admin & Dashboard Template
+                                    </p>
                                 </div>
                             </Col>
                         </Row>
@@ -125,85 +182,193 @@ const Login = (props) => {
                                 <Card className="mt-4">
                                     <CardBody className="p-4">
                                         <div className="text-center mt-2">
-                                            <h5 className="text-primary">Welcome Back !</h5>
-                                            <p className="text-muted">Sign in to continue to Velzon.</p>
+                                            <h5 className="text-primary">
+                                                Welcome Back !
+                                            </h5>
+                                            <p className="text-muted">
+                                                Sign in to continue to Velzon.
+                                            </p>
                                         </div>
-                                        {error && error ? (<Alert color="danger"> {error} </Alert>) : null}
+                                        {error && error ? (
+                                            <Alert color="danger">
+                                                {" "}
+                                                {error}{" "}
+                                            </Alert>
+                                        ) : null}
                                         <div className="p-2 mt-4">
                                             <Form
                                                 onSubmit={(e) => {
                                                     e.preventDefault();
+                                                    validation.setFieldValue(
+                                                        "csrf_token",
+                                                        csrf_token
+                                                    );
                                                     validation.handleSubmit();
                                                     return false;
                                                 }}
-                                                action="#">
-
+                                                action="#"
+                                            >
                                                 <div className="mb-3">
-                                                    <Label htmlFor="email" className="form-label">Email</Label>
+                                                    <Label
+                                                        htmlFor="email"
+                                                        className="form-label"
+                                                    >
+                                                        Email
+                                                    </Label>
                                                     <Input
-                                                        name="email"
+                                                        name="identifier"
                                                         className="form-control"
                                                         placeholder="Enter email"
                                                         type="email"
-                                                        onChange={validation.handleChange}
-                                                        onBlur={validation.handleBlur}
-                                                        value={validation.values.email || ""}
+                                                        onChange={
+                                                            validation.handleChange
+                                                        }
+                                                        onBlur={
+                                                            validation.handleBlur
+                                                        }
+                                                        value={
+                                                            validation.values
+                                                                .identifier ||
+                                                            ""
+                                                        }
                                                         invalid={
-                                                            validation.touched.email && validation.errors.email ? true : false
+                                                            validation.touched
+                                                                .identifier &&
+                                                            validation.errors
+                                                                .identifier
+                                                                ? true
+                                                                : false
                                                         }
                                                     />
-                                                    {validation.touched.email && validation.errors.email ? (
-                                                        <FormFeedback type="invalid">{validation.errors.email}</FormFeedback>
+                                                    {validation.touched
+                                                        .identifier &&
+                                                    validation.errors
+                                                        .identifier ? (
+                                                        <FormFeedback type="invalid">
+                                                            {
+                                                                validation
+                                                                    .errors
+                                                                    .identifier
+                                                            }
+                                                        </FormFeedback>
                                                     ) : null}
                                                 </div>
 
                                                 <div className="mb-3">
                                                     <div className="float-end">
-                                                        <Link to="/forgot-password" className="text-muted">Forgot password?</Link>
+                                                        <Link
+                                                            to="/forgot-password"
+                                                            className="text-muted"
+                                                        >
+                                                            Forgot password?
+                                                        </Link>
                                                     </div>
-                                                    <Label className="form-label" htmlFor="password-input">Password</Label>
+                                                    <Label
+                                                        className="form-label"
+                                                        htmlFor="password-input"
+                                                    >
+                                                        Password
+                                                    </Label>
                                                     <div className="position-relative auth-pass-inputgroup mb-3">
                                                         <Input
                                                             name="password"
-                                                            value={validation.values.password || ""}
+                                                            value={
+                                                                validation
+                                                                    .values
+                                                                    .password ||
+                                                                ""
+                                                            }
                                                             type="password"
                                                             className="form-control pe-5"
                                                             placeholder="Enter Password"
-                                                            onChange={validation.handleChange}
-                                                            onBlur={validation.handleBlur}
+                                                            onChange={
+                                                                validation.handleChange
+                                                            }
+                                                            onBlur={
+                                                                validation.handleBlur
+                                                            }
                                                             invalid={
-                                                                validation.touched.password && validation.errors.password ? true : false
+                                                                validation
+                                                                    .touched
+                                                                    .password &&
+                                                                validation
+                                                                    .errors
+                                                                    .password
+                                                                    ? true
+                                                                    : false
                                                             }
                                                         />
-                                                        {validation.touched.password && validation.errors.password ? (
-                                                            <FormFeedback type="invalid">{validation.errors.password}</FormFeedback>
+                                                        {validation.touched
+                                                            .password &&
+                                                        validation.errors
+                                                            .password ? (
+                                                            <FormFeedback type="invalid">
+                                                                {
+                                                                    validation
+                                                                        .errors
+                                                                        .password
+                                                                }
+                                                            </FormFeedback>
                                                         ) : null}
-                                                        <button className="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted" type="button" id="password-addon"><i className="ri-eye-fill align-middle"></i></button>
+                                                        <button
+                                                            className="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted"
+                                                            type="button"
+                                                            id="password-addon"
+                                                        >
+                                                            <i className="ri-eye-fill align-middle"></i>
+                                                        </button>
                                                     </div>
                                                 </div>
 
                                                 <div className="form-check">
-                                                    <Input className="form-check-input" type="checkbox" value="" id="auth-remember-check" />
-                                                    <Label className="form-check-label" htmlFor="auth-remember-check">Remember me</Label>
+                                                    <Input
+                                                        className="form-check-input"
+                                                        type="checkbox"
+                                                        value=""
+                                                        id="auth-remember-check"
+                                                    />
+                                                    <Label
+                                                        className="form-check-label"
+                                                        htmlFor="auth-remember-check"
+                                                    >
+                                                        Remember me
+                                                    </Label>
                                                 </div>
 
                                                 <div className="mt-4">
-                                                    <Button color="success" className="btn btn-success w-100" type="submit">Sign In</Button>
+                                                    <Button
+                                                        color="success"
+                                                        className="btn btn-success w-100"
+                                                        type="submit"
+                                                    >
+                                                        Sign In
+                                                    </Button>
                                                 </div>
 
                                                 <div className="mt-4 text-center">
                                                     <div className="signin-other-title">
-                                                        <h5 className="fs-13 mb-4 title">Sign In with</h5>
+                                                        <h5 className="fs-13 mb-4 title">
+                                                            Sign In with
+                                                        </h5>
                                                     </div>
                                                     <div>
                                                         <FacebookLogin
-                                                            appId={facebook.APP_ID}
+                                                            appId={
+                                                                facebook.APP_ID
+                                                            }
                                                             autoLoad={false}
-                                                            callback={facebookResponse}
-                                                            render={renderProps => (
-                                                                <Button color="primary"
+                                                            callback={
+                                                                facebookResponse
+                                                            }
+                                                            render={(
+                                                                renderProps
+                                                            ) => (
+                                                                <Button
+                                                                    color="primary"
                                                                     className="btn-icon me-1"
-                                                                    onClick={renderProps.onClick}
+                                                                    onClick={
+                                                                        renderProps.onClick
+                                                                    }
                                                                 >
                                                                     <i className="ri-facebook-fill fs-16" />
                                                                 </Button>
@@ -211,24 +376,41 @@ const Login = (props) => {
                                                         />
                                                         <GoogleLogin
                                                             clientId={
-                                                                google.CLIENT_ID ? google.CLIENT_ID : ""
+                                                                google.CLIENT_ID
+                                                                    ? google.CLIENT_ID
+                                                                    : ""
                                                             }
-                                                            render={renderProps => (
-                                                                <Button color="danger"
+                                                            render={(
+                                                                renderProps
+                                                            ) => (
+                                                                <Button
+                                                                    color="danger"
                                                                     to="#"
                                                                     className="btn-icon me-1"
-                                                                    onClick={renderProps.onClick}
+                                                                    onClick={
+                                                                        renderProps.onClick
+                                                                    }
                                                                 >
                                                                     <i className="ri-google-fill fs-16" />
                                                                 </Button>
                                                             )}
-                                                            onSuccess={googleResponse}
-                                                            onFailure={() => {
-
-                                                            }}
+                                                            onSuccess={
+                                                                googleResponse
+                                                            }
+                                                            onFailure={() => {}}
                                                         />
-                                                        <Button color="dark" className="btn-icon"><i className="ri-github-fill fs-16"></i></Button>{" "}
-                                                        <Button color="info" className="btn-icon"><i className="ri-twitter-fill fs-16"></i></Button>
+                                                        <Button
+                                                            color="dark"
+                                                            className="btn-icon"
+                                                        >
+                                                            <i className="ri-github-fill fs-16"></i>
+                                                        </Button>{" "}
+                                                        <Button
+                                                            color="info"
+                                                            className="btn-icon"
+                                                        >
+                                                            <i className="ri-twitter-fill fs-16"></i>
+                                                        </Button>
                                                     </div>
                                                 </div>
                                             </Form>
@@ -239,7 +421,6 @@ const Login = (props) => {
                                 {/* <div className="mt-4 text-center">
                                     <p className="mb-0">Don't have an account ? <Link to="/register" className="fw-semibold text-primary text-decoration-underline"> Signup </Link> </p>
                                 </div> */}
-
                             </Col>
                         </Row>
                     </Container>
