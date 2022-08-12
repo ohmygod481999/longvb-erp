@@ -5,12 +5,12 @@ import { Redirect } from "react-router-dom";
 import DashboardEcommerce from "../pages/DashboardEcommerce";
 
 //AuthenticationInner pages
-import BasicSignIn from '../pages/AuthenticationInner/Login/BasicSignIn';
+import BasicSignIn from "../pages/AuthenticationInner/Login/BasicSignIn";
 //pages
-import Maintenance from '../pages/Pages/Maintenance/Maintenance';
-import ComingSoon from '../pages/Pages/ComingSoon/ComingSoon';
-import Basic404 from '../pages/AuthenticationInner/Errors/Basic404';
-import Error500 from '../pages/AuthenticationInner/Errors/Error500';
+import Maintenance from "../pages/Pages/Maintenance/Maintenance";
+import ComingSoon from "../pages/Pages/ComingSoon/ComingSoon";
+import Basic404 from "../pages/AuthenticationInner/Errors/Basic404";
+import Error500 from "../pages/AuthenticationInner/Errors/Error500";
 import Offlinepage from "../pages/AuthenticationInner/Errors/Offlinepage";
 
 //login
@@ -21,12 +21,14 @@ import Logout from "../pages/Authentication/Logout";
 // User Profile
 import UserProfile from "../pages/Authentication/user-profile";
 import ListBranch from "../pages/Restaurant/Branch/ListBranch";
+import Categori from "../pages/Restaurant/Food/Categori";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardEcommerce },
 
-
   { path: "/restaurant/branch", component: ListBranch },
+
+  { path: "/food/categori", component: Categori },
 
   //User Profile
   { path: "/profile", component: UserProfile },
@@ -54,7 +56,6 @@ const publicRoutes = [
   { path: "/coming-soon", component: ComingSoon },
 
   { path: "/offline", component: Offlinepage },
-
 ];
 
 export { authProtectedRoutes, publicRoutes };
