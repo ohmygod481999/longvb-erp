@@ -2,6 +2,7 @@ import React from "react";
 
 //import Scss
 import "./assets/scss/themes.scss";
+import "./styles/index.scss"
 
 //imoprt Route
 import Route from "./Routes";
