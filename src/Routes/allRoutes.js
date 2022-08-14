@@ -21,14 +21,20 @@ import Logout from "../pages/Authentication/Logout";
 // User Profile
 import UserProfile from "../pages/Authentication/user-profile";
 import ListBranch from "../pages/Restaurant/Branch/ListBranch";
+import Category from "../pages/Restaurant/Product/Category";
 import ListTable from "../pages/Restaurant/Table/ListTable";
 
 const authProtectedRoutes = [
     { path: "/dashboard", component: DashboardEcommerce },
 
+    //Restaurant
     { path: "/restaurant/branch", component: ListBranch },
-
+    { path: "/restaurant/food/category", component: Category },
     { path: "/restaurant/table", component: ListTable },
+
+    //User Profile
+    { path: "/profile", component: UserProfile },
+    { path: "/restaurant/branch", component: ListBranch },
 
     //User Profile
     { path: "/profile", component: UserProfile },

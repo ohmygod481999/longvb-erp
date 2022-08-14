@@ -3,7 +3,12 @@
 //
 
 .modal-title {
+
     font-weight: $font-weight-semibold;
+}
+.bg-light.p-3.modal-header >h5{
+	display: block;
+	width: 100%;
 }
 
 .modal-dialog:not(.modal-dialog-scrollable) {
