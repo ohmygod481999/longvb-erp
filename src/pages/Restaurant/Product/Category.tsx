@@ -233,7 +233,6 @@ const Categori = () => {
                 id="customername-field"
                 className="form-control"
                 placeholder="Nhập loại món"
-                value={categoryname}
                 onChange={(e: any) => setCategoryName(e.target.value)}
                 required
               />
@@ -252,7 +251,10 @@ const Categori = () => {
                 type="button"
                 className="btn btn-success"
                 id="add-btn"
-                onClick={handleCreateCategory}
+                onClick={() => {
+                  handleCreateCategory();
+                  setmodal_add(false);
+                }}
               >
                 Them loai mon
               </button>
