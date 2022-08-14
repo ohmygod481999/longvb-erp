@@ -20,9 +20,9 @@ import Logout from "../pages/Authentication/Logout";
 
 // User Profile
 import UserProfile from "../pages/Authentication/user-profile";
-import ListBranch from "../pages/Restaurant/Branch/ListBranch";
+import ListBranch from "../pages/Restaurant/Branch";
 import Category from "../pages/Restaurant/Product/Category";
-import ListTable from "../pages/Restaurant/Table/ListTable";
+import ListTable from "../pages/Restaurant/Table";
 
 const authProtectedRoutes = [
     { path: "/dashboard", component: DashboardEcommerce },

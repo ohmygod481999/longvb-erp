@@ -14,18 +14,18 @@ import {
   ModalHeader,
   Row,
 } from "reactstrap";
-import BreadCrumb from "../../../Components/Common/BreadCrumb";
-import { formatDateTime } from "../../../helpers";
+import BreadCrumb from "../../../../Components/Common/BreadCrumb";
+import { formatDateTime } from "../../../../helpers";
 import {
   ProductCategory,
   ProductCategoryResponse,
-} from "../../../models/product.model";
+} from "../../../../models/product.model";
 import {
   CREATE_PRODUCT_CATEGORY,
   DELETE_PRODUCT_CATEGORY,
   GET_ALL_PRODUCT_CATEGORY,
   UPDATE_PRODUCT_CATEGORY,
-} from "../../../states/product/product.queries";
+} from "../../../../states/product/product.queries";
 
 const Categori = () => {
   const [modal_add, setmodal_add] = useState<boolean>(false);
