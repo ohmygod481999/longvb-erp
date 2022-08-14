@@ -21,7 +21,7 @@ import Logout from "../pages/Authentication/Logout";
 // User Profile
 import UserProfile from "../pages/Authentication/user-profile";
 import ListBranch from "../pages/Restaurant/Branch/ListBranch";
-import Categori from "../pages/Restaurant/Food/Categori";
+import Categori from "../pages/Restaurant/Product/Category";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardEcommerce },
