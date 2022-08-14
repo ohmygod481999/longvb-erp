@@ -13,9 +13,9 @@ export const useNavdata = () => {
     const [isRestaurant, setIsRestaurant] = useState(false);
     // Restaurant
     const [isStore, setIsStore] = useState(false);
-    
     const [isFood, setIsFood] = useState (false)
-    const [isFoodCategori,setIsFoodCategori] = useState(false)
+    const [isFoodCategory,setIsFoodCategory] = useState(false)
+    
     const [iscurrentState, setIscurrentState] = useState<CurrentState>(
         CurrentState.Dashboard
     );
@@ -118,14 +118,14 @@ export const useNavdata = () => {
                         {
                             id: "foodCategori",
                             label: "Phân loại món ăn",
-                            link: "/food/categori",
+                            link: "/restaurant/food/category",
                             isChildItem: false,
                              click: function (e: any) {
                                 e.preventDefault();
-                                 setIsFoodCategori(!isFoodCategori);
+                                 setIsFoodCategory(!isFoodCategory);
                             },
                              parentId: "food",
-                             stateVariables: isFoodCategori,
+                             stateVariables: isFoodCategory,
                         }
                     ]
                 }

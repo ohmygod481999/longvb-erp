@@ -31,7 +31,7 @@ const Categori = () => {
   const [modal_add, setmodal_add] = useState<boolean>(false);
   const [modal_update, setmodal_update] = useState<boolean>(false);
   const [modal_delete, setmodal_delete] = useState<boolean>(false);
-  const [idCategory, setIdCateGory] = useState<number>(-1);
+  const [idCategory, setIdCategory] = useState<number>(-1);
 
   const [productCategory, setProductCategory] = useState<ProductCategory[]>([]);
   const [categoryname, setCategoryName] = useState<string>("");
@@ -140,7 +140,7 @@ const Categori = () => {
                                 <div
                                   className="edit"
                                   onClick={() => {
-                                    setIdCateGory(
+                                    setIdCategory(
                                       Number(cell?.toString().split("+")[0])
                                     );
                                     setCategoryName(
@@ -160,7 +160,7 @@ const Categori = () => {
                                 <div
                                   className="remove"
                                   onClick={() => {
-                                    setIdCateGory(
+                                    setIdCategory(
                                       Number(cell?.toString().split("+")[0])
                                     );
                                     setmodal_delete(true);
@@ -320,7 +320,7 @@ const Categori = () => {
                 type="button"
                 className="btn btn-light"
                 onClick={() => {
-                  setIdCateGory(-1);
+                  setIdCategory(-1);
                   setmodal_update(false);
                 }}
               >
@@ -358,14 +358,14 @@ const Categori = () => {
         >
           Xác nhận
         </ModalHeader>
-        <ModalBody className="text-center p-5">
+        <ModalBody className="text-center p-3">
           <div className="mt-4">
             <h4 className="mb-3">Bạn có chắc chắn muốn xoá ?</h4>
             <div className="hstack gap-2 justify-content-center">
               <button
                 className="btn btn-light link-success fw-medium"
                 onClick={() => {
-                  setIdCateGory(-1);
+                  setIdCategory(-1);
                   tog_delete();
                 }}
               >
