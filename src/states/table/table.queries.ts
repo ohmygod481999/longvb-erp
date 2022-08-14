@@ -6,6 +6,7 @@ export const GET_TABLES_PAGINATION = gql`
             where: { zone_id: { _eq: $zone_id } }
             limit: $limit
             offset: $offset
+            order_by: { created_at: desc }
         ) {
             id
             name

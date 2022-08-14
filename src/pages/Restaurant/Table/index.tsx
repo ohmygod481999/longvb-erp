@@ -1,5 +1,4 @@
 import React, { useMemo, useState, useCallback, useEffect } from "react";
-import { Link } from "react-router-dom";
 import {
     Button,
     Card,
@@ -11,7 +10,7 @@ import {
 } from "reactstrap";
 import BreadCrumb from "../../../Components/Common/BreadCrumb";
 import Select, { SingleValue } from "react-select";
-import { useLazyQuery, useQuery } from "@apollo/client";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { GET_ALL_ZONE } from "../../../states/zone/zone.queries";
 import { ZonesResponse } from "../../../models/zone.model";
 import { useProfile } from "../../../Components/Hooks/AuthHooks";
@@ -20,8 +19,11 @@ import { GET_ALL_STORES_OF_COMPANY } from "../../../states/store/store.queries";
 import { GET_TABLES_PAGINATION } from "../../../states/table/table.queries";
 import { TablesResponse } from "../../../models/table.model";
 import { usePagination } from "../../../Components/Hooks/usePagination";
-import { useEffectAllDepsChange } from "../../../Components/Hooks/useEffectAllDepsChange";
 import Pagination from "../../../Components/Common/Pagination";
+import { useTableCheck } from "../../../Components/Hooks/useTableCheck";
+import { tableMutations } from "../../../states/table/table.mutations";
+import DeleteModal from "../../../Components/Common/DeleteModal";
+import ModalAddTable from "./ModalAddTable";
 
 function ListTable() {
     const { userProfile } = useProfile();
@@ -35,6 +37,9 @@ function ListTable() {
         value: number;
         label: string;
     }> | null>(null);
+
+    const [isShowModalDelete, setIsShowModalDelete] = useState(false);
+    const [isShowModalAdd, setIsShowModalAdd] = useState(false);
 
     const handleStoreChange = useCallback(
         (values: SingleValue<{ value: number; label: string }> | null) => {
@@ -70,6 +75,19 @@ function ListTable() {
 
     const { limit, offset, total, pageCount, setLimit, setOffset, setTotal } =
         usePagination(2);
+
+    const [deleteMultiTables] = useMutation(tableMutations.DELETE_MULTI_TABLE, {
+        refetchQueries: [
+            {
+                query: GET_TABLES_PAGINATION,
+                variables: {
+                    zone_id: selectedZone?.value,
+                    limit: limit,
+                    offset: offset,
+                },
+            },
+        ],
+    });
 
     const [getTables, queryTablesValues] = useLazyQuery<TablesResponse>(
         GET_TABLES_PAGINATION
@@ -133,8 +151,39 @@ function ListTable() {
         return null;
     }, [queryTablesValues.data]);
 
+    const { check, checkAll, isIdChecked, isCheckAll, checkedIds, resetCheck } =
+        useTableCheck(tables ? tables.map((table) => table.id) : []);
+
     return (
         <React.Fragment>
+            <DeleteModal
+                show={isShowModalDelete}
+                onCloseClick={() => setIsShowModalDelete(false)}
+                onDeleteClick={() => {
+                    deleteMultiTables({
+                        variables: {
+                            ids: checkedIds,
+                        },
+                    });
+                    setIsShowModalDelete(false);
+                    resetCheck();
+                }}
+            />
+            <ModalAddTable
+                show={isShowModalAdd}
+                onClose={() => setIsShowModalAdd(false)}
+                onAddSuccess={(zone_id: number) => {
+                    getTables({
+                        variables: {
+                            zone_id: zone_id,
+                            limit: limit,
+                            offset: offset,
+                        },
+                        fetchPolicy: "network-only",
+                    });
+                }}
+                zone={selectedZone}
+            />
             <div className="page-content">
                 <Container fluid>
                     <BreadCrumb
@@ -152,19 +201,13 @@ function ListTable() {
                                         <Button
                                             color="success"
                                             className="add-btn me-1"
-                                            // onClick={() =>
-                                            //     tog_list()
-                                            // }
+                                            onClick={() =>
+                                                setIsShowModalAdd(true)
+                                            }
                                             id="create-btn"
                                         >
                                             <i className="ri-add-line align-bottom me-1"></i>{" "}
                                             Add
-                                        </Button>
-                                        <Button
-                                            className="btn btn-soft-danger"
-                                            // onClick="deleteMultiple()"
-                                        >
-                                            <i className="ri-delete-bin-2-line"></i>
                                         </Button>
                                     </div>
                                 </CardHeader>
@@ -206,11 +249,28 @@ function ListTable() {
                                             </Col>
                                         </Row>
 
+                                        {checkedIds.length > 0 && (
+                                            <Row>
+                                                <Col>
+                                                    Đã chọn {checkedIds.length}{" "}
+                                                    bản ghi.{" "}
+                                                    <a
+                                                        href="#"
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            setIsShowModalDelete(
+                                                                true
+                                                            );
+                                                        }}
+                                                    >
+                                                        Xóa
+                                                    </a>
+                                                </Col>
+                                            </Row>
+                                        )}
+
                                         <div className="table-responsive table-card mt-3 mb-1">
-                                            <table
-                                                className="table align-middle table-nowrap"
-                                                id="customerTable"
-                                            >
+                                            <table className="table align-middle table-nowrap">
                                                 <thead className="table-light">
                                                     <tr>
                                                         <th
@@ -225,6 +285,12 @@ function ListTable() {
                                                                     type="checkbox"
                                                                     id="checkAll"
                                                                     value="option"
+                                                                    checked={
+                                                                        isCheckAll
+                                                                    }
+                                                                    onChange={
+                                                                        checkAll
+                                                                    }
                                                                 />
                                                             </div>
                                                         </th>
@@ -259,6 +325,16 @@ function ListTable() {
                                                                             type="checkbox"
                                                                             name="chk_child"
                                                                             value="option1"
+                                                                            onChange={(
+                                                                                e
+                                                                            ) => {
+                                                                                check(
+                                                                                    table.id
+                                                                                );
+                                                                            }}
+                                                                            checked={isIdChecked(
+                                                                                table.id
+                                                                            )}
                                                                         />
                                                                     </div>
                                                                 </th>
@@ -281,15 +357,6 @@ function ListTable() {
                                                                                 data-bs-target="#showModal"
                                                                             >
                                                                                 Edit
-                                                                            </button>
-                                                                        </div>
-                                                                        <div className="remove">
-                                                                            <button
-                                                                                className="btn btn-sm btn-danger remove-item-btn"
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#deleteRecordModal"
-                                                                            >
-                                                                                Remove
                                                                             </button>
                                                                         </div>
                                                                     </div>
@@ -332,43 +399,6 @@ function ListTable() {
                                                 setOffset={setOffset}
                                                 total={total}
                                             />
-                                            {/* <div className="pagination-wrap hstack gap-2">
-                                                <Link
-                                                    className="page-item pagination-prev disabled"
-                                                    to="#"
-                                                >
-                                                    Previous
-                                                </Link>
-                                                <ul className="pagination listjs-pagination mb-0">
-                                                    <li className="active">
-                                                        <a
-                                                            className="page"
-                                                            href="#"
-                                                            data-i={1}
-                                                            data-page={3}
-                                                        >
-                                                            1
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a
-                                                            className="page"
-                                                            href="#"
-                                                            data-i={2}
-                                                            data-page={3}
-                                                        >
-                                                            2
-                                                        </a>
-                                                    </li>
-                                                </ul>
-
-                                                <Link
-                                                    className="page-item pagination-next"
-                                                    to="#"
-                                                >
-                                                    Next
-                                                </Link>
-                                            </div> */}
                                         </div>
                                     </div>
                                 </CardBody>
