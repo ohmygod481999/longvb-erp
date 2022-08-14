@@ -14,6 +14,7 @@ export const useNavdata = () => {
 
     // Restaurant
     const [isStore, setIsStore] = useState(false);
+    const [isTable, setIsTable] = useState(false);
 
     const [iscurrentState, setIscurrentState] = useState<CurrentState>(
         CurrentState.Dashboard
@@ -101,6 +102,18 @@ export const useNavdata = () => {
                     },
                     parentId: "restaurant",
                     stateVariables: isStore,
+                },
+                {
+                    id: "store",
+                    label: "Bàn ăn",
+                    link: "/restaurant/table",
+                    isChildItem: false,
+                    click: function (e: any) {
+                        e.preventDefault();
+                        setIsTable(!isTable);
+                    },
+                    parentId: "restaurant",
+                    stateVariables: isTable,
                 },
             ],
         },
