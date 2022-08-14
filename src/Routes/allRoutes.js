@@ -22,40 +22,46 @@ import Logout from "../pages/Authentication/Logout";
 import UserProfile from "../pages/Authentication/user-profile";
 import ListBranch from "../pages/Restaurant/Branch/ListBranch";
 import Category from "../pages/Restaurant/Product/Category";
+import ListTable from "../pages/Restaurant/Table/ListTable";
 
 const authProtectedRoutes = [
-  { path: "/dashboard", component: DashboardEcommerce },
+    { path: "/dashboard", component: DashboardEcommerce },
 
-  { path: "/restaurant/branch", component: ListBranch },
+    //Restaurant
+    { path: "/restaurant/branch", component: ListBranch },
+    { path: "/restaurant/food/category", component: Category },
+    { path: "/restaurant/table", component: ListTable },
 
-  { path: "/restaurant/food/category", component: Category },
+    //User Profile
+    { path: "/profile", component: UserProfile },
+    { path: "/restaurant/branch", component: ListBranch },
 
-  //User Profile
-  { path: "/profile", component: UserProfile },
+    //User Profile
+    { path: "/profile", component: UserProfile },
 
-  // this route should be at the end of all other routes
-  // eslint-disable-next-line react/display-name
-  {
-    path: "/",
-    exact: true,
-    component: () => <Redirect to="/dashboard" />,
-  },
+    // this route should be at the end of all other routes
+    // eslint-disable-next-line react/display-name
+    {
+        path: "/",
+        exact: true,
+        component: () => <Redirect to="/dashboard" />,
+    },
 ];
 
 const publicRoutes = [
-  // Authentication Page
-  { path: "/logout", component: Logout },
-  { path: "/login", component: Login },
-  { path: "/forgot-password", component: ForgetPasswordPage },
+    // Authentication Page
+    { path: "/logout", component: Logout },
+    { path: "/login", component: Login },
+    { path: "/forgot-password", component: ForgetPasswordPage },
 
-  //AuthenticationInner pages
-  { path: "/signin", component: BasicSignIn },
-  { path: "/error-404", component: Basic404 },
-  { path: "/error-500", component: Error500 },
-  { path: "/maintenance", component: Maintenance },
-  { path: "/coming-soon", component: ComingSoon },
+    //AuthenticationInner pages
+    { path: "/signin", component: BasicSignIn },
+    { path: "/error-404", component: Basic404 },
+    { path: "/error-500", component: Error500 },
+    { path: "/maintenance", component: Maintenance },
+    { path: "/coming-soon", component: ComingSoon },
 
-  { path: "/offline", component: Offlinepage },
+    { path: "/offline", component: Offlinepage },
 ];
 
 export { authProtectedRoutes, publicRoutes };
