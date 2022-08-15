@@ -102,6 +102,18 @@ export const useNavdata = () => {
                     parentId: "restaurant",
                     stateVariables: isStore,
                 },
+                {
+                    id: "zone",
+                    label: "Khu vực",
+                    link: "/restaurant/zone",
+                    isChildItem: false,
+                    click: function (e: any) {
+                        e.preventDefault();
+                        setIsStore(!isStore);
+                    },
+                    parentId: "restaurant",
+                    stateVariables: isStore,
+                },
             ],
         },
     ];

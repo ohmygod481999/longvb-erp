@@ -21,12 +21,14 @@ import Logout from "../pages/Authentication/Logout";
 // User Profile
 import UserProfile from "../pages/Authentication/user-profile";
 import ListBranch from "../pages/Restaurant/Branch/ListBranch";
+import ZoneManager from "../pages/Restaurant/Zone/ZoneManager";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardEcommerce },
 
 
   { path: "/restaurant/branch", component: ListBranch },
+  { path: "/restaurant/zone", component: ZoneManager },
 
   //User Profile
   { path: "/profile", component: UserProfile },

@@ -1,14 +1,13 @@
 import React, { useState, ReactNode } from "react";
 import "./styles.css";
-import { Card, CardBody, CardHeader, Col, Container, Row } from "reactstrap";
+import { Card, CardBody, CardHeader, Col, Container, Row, Modal, Button, ModalBody, ModalHeader, ModalFooter } from "reactstrap";
 import BreadCrumb from "../../../Components/Common/BreadCrumb";
 import { Grid, _ } from "gridjs-react";
 import { useQuery, useMutation } from "@apollo/client";
 import { Store, StoresResponse } from "../../../models/store.model";
-import { GET_ALL_STORES_OF_COMPANY, CREATE_STORE, DELETE_STORE, UPDATE_STORE } from "../../../states/store/store.queries";
+import { GET_ALL_STORES_OF_COMPANY, GET_ALL_COMPANY, CREATE_STORE, DELETE_STORE, UPDATE_STORE } from "../../../states/store/store.queries";
 import { useProfile } from "../../../Components/Hooks/AuthHooks";
 import { formatDateTime } from "../../../helpers";
-import Modal from "../../../Components/Utils/Modal";
 
 const data1 = [
     [
@@ -97,7 +96,9 @@ function ListBranch() {
     document.title = "Quản lý chi nhánh";
 
     const { userProfile } = useProfile();
-    const [insertStoreMode, setInsertStoreMode] = useState<boolean>(false)
+    const [modal, setModal] = useState<boolean>(false)
+    const [storeName, setStoreName] = useState<string>("");
+    const [companyId, setCompanyId] = useState<number>(NaN);
 
     const { data, loading, error } = useQuery<StoresResponse>(
         GET_ALL_STORES_OF_COMPANY,
@@ -108,9 +109,23 @@ function ListBranch() {
         }
     );
 
+    const companies = useQuery(GET_ALL_COMPANY, {
+        variables: {}
+    })
+
     const [createStore, createStoreResponse] = useMutation(CREATE_STORE)
     const [deleteStore, deleteStoreResponse] = useMutation(DELETE_STORE)
     const [updateStore, updateStoreResponse] = useMutation(UPDATE_STORE)
+
+    const handleCreateStore = () => {
+        console.log(storeName)
+        createStore({
+            variables: {
+                name: storeName,
+                company_id: userProfile?.company_id,
+            },
+        })
+    }
 
     const handleDeleteStore = (store_id: number) => {
 
@@ -135,38 +150,48 @@ function ListBranch() {
                     new_name: txt
                 }
             }); window.location.reload()
-            
+
         }
     }
-
-    const [storeName, setStoreName] = useState<string>("");
-    const [companyId, setCompanyId] = useState<string>("");
-
-    const handleCreateStore = () => {
-        createStore({
-            variables: {
-                name: storeName
-            }
-        })
-    }
-
-    console.log(data?.store);
+    const toggle = () => setModal(!modal)
 
     return (
         <React.Fragment>
-            {insertStoreMode && <Modal toggle={setInsertStoreMode}>
-                <div className="insert-store">
-                    <div className="insert-store-heading">
-                        <span className="txt">Thêm chi nhánh</span>
-                        <span onClick={() => setInsertStoreMode(false)} className="close-modal-btn"></span>
-                    </div>
-                    <div className="insert-store-body">
-                        <input onClick={(e: any) => setStoreName(e.target.value)} placeholder="Tên chi nhánh" />
-                        <input onClick={(e: any) => setCompanyId(e.target.value)} placeholder="Mã công ty" />
-                        <button onClick={handleCreateStore}>Hoàn tất</button>
-                    </div>
-                </div>
-            </Modal>}
+            <Modal isOpen={modal} toggle={toggle} className={""} centered >
+                <ModalHeader className="bg-light p-3">
+                    Thêm chi nhánh
+                    <Button onClick={toggle} type="button" className="btn-close" aria-label="Close" >
+                    </Button>
+                </ModalHeader>
+                <form>
+                    <ModalBody>
+                        <div className="mb-3" id="modal-id" style={{ display: "none" }}>
+                            <label htmlFor="id-field" className="form-label">ID</label>
+                            <input type="text" id="id-field" className="form-control" placeholder="ID" readOnly />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="customername-field" className="form-label">Tên chi nhánh</label>
+                            <input onChange={(e:any) => setStoreName(e.target.value)} type="text" id="customername-field" className="form-control" placeholder="Nhập tên chi nhánh" required />
+                        </div>
+
+                        <div>
+                            <label htmlFor="status-field" className="form-label">Công ty</label>
+                            <select onChange={(e: any) => setCompanyId(Number(e.target.value))} className="form-control" data-trigger name="status-field" id="status-field" >
+                                {companies.data?.company?.map((c: any, index:number) => <option key={index} value={c.id}>{c.id}-{c.name}</option>)}
+
+                            </select>
+                        </div>
+                    </ModalBody>
+                    <ModalFooter>
+                        <div className="hstack gap-2 justify-content-end">
+
+                            <button onClick={handleCreateStore} className="btn btn-success">Thêm Chi Nhánh</button>
+
+                        </div>
+                    </ModalFooter>
+                </form>
+            </Modal>
             <div className="page-content">
                 <Container fluid>
                     <BreadCrumb
@@ -179,7 +204,7 @@ function ListBranch() {
                                 <CardHeader>
                                     <h4 className="card-title mb-0 flex list-branch-heading">
                                         Danh sách chi nhánh
-                                        <button onClick={() => setInsertStoreMode(true)} className="add-store-btn">Thêm chi nhánh</button>
+                                        <button onClick={toggle} className="add-store-btn">Thêm chi nhánh</button>
                                     </h4>
                                 </CardHeader>
 
@@ -229,7 +254,7 @@ function ListBranch() {
                                                         _(
                                                             <div>
                                                                 <a
-                                                                    onClick={()=>handleUpdateStore(Number(cell))}
+                                                                    onClick={() => handleUpdateStore(Number(cell))}
                                                                     className="text-reset text-decoration-underline"
                                                                 >
                                                                     {" "}

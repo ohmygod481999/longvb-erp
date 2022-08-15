@@ -1,0 +1,208 @@
+import React, { useState } from "react"
+import BreadCrumb from "../../../Components/Common/BreadCrumb";
+import { Card, CardBody, CardHeader, Col, Table, Container, Row, Modal, Button, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import "./styles.css"
+import { GET_ALL_STORES, DELETE_ZONE, CREATE_ZONE, GET_ALL_ZONE, UPDATE_ZONE } from "../../../states/store/store.queries";
+import { useQuery, useMutation } from "@apollo/client";
+
+export default function ZoneManager() {
+
+    const [modal, setModal] = useState<boolean>(false)
+    const [searchInput, setSearchInput] = useState<string>("")
+    const [editModal, setEditModal] = useState<boolean>(false)
+    const [zoneName, setZoneName] = useState<string>("")
+    const [storeId, setStoreId] = useState<string>("")
+    const [zonesData, setZonesData] = useState<any>({})
+    const stores = useQuery(GET_ALL_STORES, { variables: {} }) // stores.data
+    const zones = useQuery(GET_ALL_ZONE, { variables: {}, onCompleted: (data) => setZonesData(data) }) // zones.data
+    const [createZone, createZoneResponse] = useMutation(CREATE_ZONE)
+    const [deteleZone, deteleZoneResponse] = useMutation(DELETE_ZONE)
+    const [updateZone, updateZoneResponse] = useMutation(UPDATE_ZONE)
+
+    const handleCreateZone = () => {
+        if (storeId) {
+            createZone({
+                variables: {
+                    name: zoneName,
+                    store_id: Number(storeId)
+                }
+            })
+        }
+    }
+
+    const handleDeleteZone = (zone_id: number) => {
+        let isOkay = window.confirm(`Chắc chắn chưa bro ???`)
+        if (isOkay) {
+            deteleZone({
+                variables: {
+                    id: zone_id
+                }
+            })
+            window.location.reload()
+        }
+    }
+    const [editData, setEditData] = useState<any>({})
+    const preUpdateZone = (data: any) => {
+        setEditData(data)
+        setEditModal(true)
+    }
+    const handleUpdateZone = () => {
+        if (storeId) {
+            updateZone({
+                variables: {
+                    id: editData.id,
+                    new_name: zoneName,
+                    new_store_id: Number(storeId)
+                }
+            })
+        }
+    }
+
+    const toggle = () => setModal(!modal)
+    const toggleEditModal = () => setEditModal(!editModal)
+    return <React.Fragment>
+        <div className="page-content">
+            <Modal isOpen={modal} toggle={toggle} className={""} centered >
+                <ModalHeader className="bg-light p-3">
+                    Thêm khu vực
+                    <Button onClick={toggle} type="button" className="btn-close" aria-label="Close" >
+                    </Button>
+                </ModalHeader>
+                <form>
+                    <ModalBody>
+                        <div className="mb-3" id="modal-id" style={{ display: "none" }}>
+                            <label htmlFor="id-field" className="form-label">ID</label>
+                            <input type="text" id="id-field" className="form-control" placeholder="ID" readOnly />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="customername-field" className="form-label">Tên khu vực</label>
+                            <input onChange={(e: any) => setZoneName(e.target.value)} type="text" id="customername-field" className="form-control" placeholder="Nhập tên khu vực" required />
+                        </div>
+
+                        <div>
+                            <label htmlFor="status-field" className="form-label">Chi nhánh</label>
+                            <select onChange={(e: any) => setStoreId(e.target.value)} className="form-control" data-trigger name="status-field" id="status-field" >
+                                <option value="">{""}</option>
+                                {stores?.data?.store && stores
+                                    .data
+                                    .store
+                                    .map((store: any) => <option key={store.id} value={store.id}>{store.name}</option>)}
+                            </select>
+                        </div>
+                    </ModalBody>
+                    <ModalFooter>
+                        <div className="hstack gap-2 justify-content-end">
+
+                            <button onClick={handleCreateZone} type="submit" className="btn btn-success">Thêm khu vực</button>
+
+                        </div>
+                    </ModalFooter>
+                </form>
+            </Modal>
+
+            <Modal isOpen={editModal} toggle={toggleEditModal} className={""} centered >
+                <ModalHeader className="bg-light p-3">
+                    Sửa khu vực:
+                    <Button onClick={toggleEditModal} type="button" className="btn-close" aria-label="Close" >
+                    </Button>
+                </ModalHeader>
+                <form>
+                    <ModalBody>
+                        <div className="mb-3" id="modal-id" style={{ display: "none" }}>
+                            <label htmlFor="id-field" className="form-label">ID</label>
+                            <input type="text" id="id-field" className="form-control" placeholder="ID" readOnly />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="customername-field" className="form-label">Customer Name</label>
+                            <input onChange={(e: any) => setZoneName(e.target.value)} defaultValue={editData.name} type="text" id="customername-field" className="form-control" placeholder="Enter Name" required />
+                        </div>
+
+                        <div>
+                            <label htmlFor="status-field" className="form-label">Chi nhánh</label>
+                            <select onChange={(e: any) => setStoreId(e.target.value)} className="form-control" data-trigger name="status-field" id="status-field" >
+                                <option value="">{""}</option>
+                                {stores?.data?.store && stores
+                                    .data
+                                    .store
+                                    .map((store: any) => <option key={store.id} value={store.id}>{store.name}</option>)}
+                            </select>
+                        </div>
+                    </ModalBody>
+                    <ModalFooter>
+                        <div className="hstack gap-2 justify-content-end">
+
+                            <button onClick={handleUpdateZone} type="submit" className="btn btn-success">Hoàn tất</button>
+
+                        </div>
+                    </ModalFooter>
+                </form>
+            </Modal>
+            <Container fluid>
+                <BreadCrumb
+                    title="Zone Manager"
+                    pageTitle="Quản trị nhà hàng" />
+
+                <Row>
+                    <Col lg={12}>
+                        <Card>
+                            <CardHeader>
+                                <h4 className="card-title mb-0 flex list-branch-heading">
+                                    Danh sách chi nhánh
+                                    <button onClick={toggle} className="add-store-btn">Thêm khu vực</button>
+                                </h4>
+                            </CardHeader>
+
+                            <CardBody>
+
+                                <input onChange={(e:any) => setSearchInput(e.target.value)} type="search" placeholder="Nhập từ khóa để tìm kiếm" className="px-12 py-2 w"/>
+
+                                <Table bordered={false}>
+                                    <thead>
+                                        <tr>
+                                            <th className="txt-center">ID</th>
+                                            <th className="txt-center">Tên</th>
+                                            <th className="txt-center">Chi nhánh</th>
+                                            <th className="txt-center">Ngày tạo</th>
+                                            <th className="txt-center">Actions</th>
+                                        </tr>
+
+                                    </thead>
+                                    <tbody>
+
+                                        {!searchInput ? zonesData && zonesData?.res_zone?.map((zone: any) => <tr key={zone.id}>
+                                            <td className="txt-center">{zone.id}</td>
+                                            <td className="txt-center">{zone.name}</td>
+                                            <td className="txt-center">{zone.store_id}</td>
+                                            <td className="txt-center">{zone.created_at}</td>
+                                            <td className="txt-center">
+                                                <div>
+                                                    <a onClick={() => preUpdateZone(zone)} className="btn-action">Sửa</a>
+                                                    <a onClick={() => handleDeleteZone(zone.id)} className="ml-3 btn-action">Xóa</a>
+                                                </div>
+                                            </td>
+                                        </tr>): zonesData && zonesData?.res_zone?.filter((zone:any) => zone.name.includes(searchInput)).map((zone: any) => <tr key={zone.id}>
+                                        <td className="txt-center">{zone.id}</td>
+                                            <td className="txt-center">{zone.name}</td>
+                                            <td className="txt-center">{zone.store_id}</td>
+                                            <td className="txt-center">{zone.created_at}</td>
+                                            <td className="txt-center">
+                                                <div>
+                                                    <a onClick={() => preUpdateZone(zone)} className="btn-action">Sửa</a>
+                                                    <a onClick={() => handleDeleteZone(zone.id)} className="ml-3 btn-action">Xóa</a>
+                                                </div>
+                                            </td>
+                                        </tr>)}
+
+                                    </tbody>
+                                </Table>
+                            </CardBody>
+                        </Card>
+                    </Col>
+                </Row>
+            </Container>
+        </div>
+    </React.Fragment>
+}

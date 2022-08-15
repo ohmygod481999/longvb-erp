@@ -1,0 +1,28 @@
+.txt-center {
+    text-align: center;
+    margin: auto;
+}
+
+.ml-2 {
+    margin-left: 6px;
+}
+
+.ml-3 {
+    margin-left: 9px;
+}
+
+.btn-action {
+    cursor: pointer;
+}
+
+.py-2 {
+    padding: 2px 0;
+}
+.px-12 {
+    padding: 0 12px;
+}
+
+.w {
+    width: 30%;
+    background: none;
+}
