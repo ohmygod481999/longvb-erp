@@ -90,3 +90,10 @@ File: Custom Css File
 .items-center{
     align-items: center;
 }
+.custom-img{
+    width: 10vw;
+}
+.custom-img > img{
+    max-width: 100%;
+    object-fit: cover;
+}

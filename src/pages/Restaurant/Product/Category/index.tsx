@@ -25,7 +25,7 @@ import {
   DELETE_PRODUCT_CATEGORY,
   GET_ALL_PRODUCT_CATEGORY,
   UPDATE_PRODUCT_CATEGORY,
-} from "../../../../states/product/product.queries";
+} from "../../../../states/product/productCategory.queries";
 
 const Categori = () => {
   const [modal_add, setmodal_add] = useState<boolean>(false);

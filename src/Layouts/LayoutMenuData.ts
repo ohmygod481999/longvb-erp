@@ -16,6 +16,7 @@ export const useNavdata = () => {
     
     const [isFood, setIsFood] = useState (false)
     const [isFoodCategory,setIsFoodCategory] = useState(false)
+    const [isFoods, setIsFoods] = useState (false)
     
     const [isTable, setIsTable] = useState(false);
 
@@ -129,6 +130,18 @@ export const useNavdata = () => {
                             },
                              parentId: "food",
                              stateVariables: isFoodCategory,
+                        },
+                        {
+                            id: "foods",
+                            label: "Món ăn",
+                            link: "/restaurant/food",
+                            isChildItem: false,
+                             click: function (e: any) {
+                                e.preventDefault();
+                                 setIsFoodCategory(!isFoods);
+                            },
+                             parentId: "food",
+                             stateVariables: isFoods,
                         }
                     ]
                 },
