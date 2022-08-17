@@ -1,10 +1,12 @@
-import React, { useState } from "react"
+import React, { useState, ReactNode } from "react"
 import BreadCrumb from "../../../Components/Common/BreadCrumb";
 import { Card, CardBody, CardHeader, Col, Table, Container, Row, Modal, Button, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./styles.css"
 import { GET_ALL_STORES, DELETE_ZONE, CREATE_ZONE, GET_ALL_ZONE, UPDATE_ZONE } from "../../../states/store/store.queries";
 import { useQuery, useMutation } from "@apollo/client";
+import { formatDateTime } from "../../../helpers";
+import { Grid, _ } from "gridjs-react";
 
 export default function ZoneManager() {
 
@@ -21,6 +23,7 @@ export default function ZoneManager() {
     const [updateZone, updateZoneResponse] = useMutation(UPDATE_ZONE)
 
     const handleCreateZone = () => {
+
         if (storeId) {
             createZone({
                 variables: {
@@ -31,7 +34,8 @@ export default function ZoneManager() {
         }
     }
 
-    const handleDeleteZone = (zone_id: number) => {
+    const handleDeleteZone = (zone_id: any) => {
+        console.log(zone_id)
         let isOkay = window.confirm(`Chắc chắn chưa bro ???`)
         if (isOkay) {
             deteleZone({
@@ -48,14 +52,19 @@ export default function ZoneManager() {
         setEditModal(true)
     }
     const handleUpdateZone = () => {
+
+        console.log(storeId, zoneName, editData)
+
         if (storeId) {
             updateZone({
                 variables: {
-                    id: editData.id,
+                    id: editData,
                     new_name: zoneName,
                     new_store_id: Number(storeId)
                 }
             })
+
+           
         }
     }
 
@@ -117,7 +126,7 @@ export default function ZoneManager() {
 
                         <div className="mb-3">
                             <label htmlFor="customername-field" className="form-label">Customer Name</label>
-                            <input onChange={(e: any) => setZoneName(e.target.value)} defaultValue={editData.name} type="text" id="customername-field" className="form-control" placeholder="Enter Name" required />
+                            <input onChange={(e: any) => setZoneName(e.target.value)} type="text" id="customername-field" className="form-control" placeholder="Enter Name" required />
                         </div>
 
                         <div>
@@ -156,48 +165,68 @@ export default function ZoneManager() {
                             </CardHeader>
 
                             <CardBody>
-
-                                <input onChange={(e:any) => setSearchInput(e.target.value)} type="search" placeholder="Nhập từ khóa để tìm kiếm" className="px-12 py-2 w"/>
-
-                                <Table bordered={false}>
-                                    <thead>
-                                        <tr>
-                                            <th className="txt-center">ID</th>
-                                            <th className="txt-center">Tên</th>
-                                            <th className="txt-center">Chi nhánh</th>
-                                            <th className="txt-center">Ngày tạo</th>
-                                            <th className="txt-center">Actions</th>
-                                        </tr>
-
-                                    </thead>
-                                    <tbody>
-
-                                        {!searchInput ? zonesData && zonesData?.res_zone?.map((zone: any) => <tr key={zone.id}>
-                                            <td className="txt-center">{zone.id}</td>
-                                            <td className="txt-center">{zone.name}</td>
-                                            <td className="txt-center">{zone.store_id}</td>
-                                            <td className="txt-center">{zone.created_at}</td>
-                                            <td className="txt-center">
-                                                <div>
-                                                    <a onClick={() => preUpdateZone(zone)} className="btn-action">Sửa</a>
-                                                    <a onClick={() => handleDeleteZone(zone.id)} className="ml-3 btn-action">Xóa</a>
-                                                </div>
-                                            </td>
-                                        </tr>): zonesData && zonesData?.res_zone?.filter((zone:any) => zone.name.includes(searchInput)).map((zone: any) => <tr key={zone.id}>
-                                        <td className="txt-center">{zone.id}</td>
-                                            <td className="txt-center">{zone.name}</td>
-                                            <td className="txt-center">{zone.store_id}</td>
-                                            <td className="txt-center">{zone.created_at}</td>
-                                            <td className="txt-center">
-                                                <div>
-                                                    <a onClick={() => preUpdateZone(zone)} className="btn-action">Sửa</a>
-                                                    <a onClick={() => handleDeleteZone(zone.id)} className="ml-3 btn-action">Xóa</a>
-                                                </div>
-                                            </td>
-                                        </tr>)}
-
-                                    </tbody>
-                                </Table>
+                                <div id="table-gridjs">
+                                    <Grid
+                                        data={zonesData?.res_zone?.map(
+                                            (item: any, index: number) => [
+                                                item.id,
+                                                item.name,
+                                                item.store_id,
+                                                formatDateTime(
+                                                    item.created_at,
+                                                    false
+                                                ),
+                                                item.id,
+                                            ]
+                                        ) || []}
+                                        columns={[
+                                            {
+                                                name: "ID",
+                                                formatter: (
+                                                    cell: ReactNode
+                                                ) =>
+                                                    _(
+                                                        <span className="fw-semibold">
+                                                            {cell}
+                                                        </span>
+                                                    ),
+                                            },
+                                            "Tên khu vực",
+                                            "Chi nhánh",
+                                            "Ngày tạo",
+                                            {
+                                                name: "Thao tác",
+                                                formatter: (
+                                                    cell: ReactNode
+                                                ) =>
+                                                    _(
+                                                        <div>
+                                                            <a
+                                                                onClick={() => preUpdateZone(cell)}
+                                                                className="text-reset text-decoration-underline"
+                                                            >
+                                                                {" "}
+                                                                Sửa
+                                                            </a>{" "}
+                                                            /{" "}
+                                                            <a
+                                                                onClick={() => handleDeleteZone(cell)}
+                                                                className="text-reset text-decoration-underline"
+                                                            >
+                                                                Xóa{" "}
+                                                            </a>
+                                                        </div>
+                                                    ),
+                                            },
+                                        ]}
+                                        search={true}
+                                        sort={true}
+                                        pagination={{
+                                            enabled: true,
+                                            limit: 5,
+                                        }}
+                                    />
+                                </div>
                             </CardBody>
                         </Card>
                     </Col>

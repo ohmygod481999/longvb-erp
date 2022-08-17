@@ -6,7 +6,9 @@
 .ml-2 {
     margin-left: 6px;
 }
-
+.mtop-4 {
+    margin-top: 14px;
+}
 .ml-3 {
     margin-left: 9px;
 }
@@ -25,4 +27,14 @@
 .w {
     width: 30%;
     background: none;
+}
+
+.rs-table-head {
+    background: #F6F8FB;
+    border-bottom: none !important;
+}
+
+.rs-th {
+    border: 1px solid var(--vz-border-color);
+    padding: 0.75rem 0.6rem;
 }
