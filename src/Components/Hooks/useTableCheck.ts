@@ -38,6 +38,7 @@ export const useTableCheck = (allIds: number[]) => {
     }, [allIds, checkedIds]);
 
     const checkAll = useCallback(() => {
+        console.log(allIds)
         if (isCheckAll) {
             setCheckedIds(checkedIds.filter((id) => !allIds.includes(id)));
         } else {
@@ -46,7 +47,7 @@ export const useTableCheck = (allIds: number[]) => {
             );
             setCheckedIds([...checkedIdsFromOtherPage, ...allIds]);
         }
-    }, [isCheckAll]);
+    }, [isCheckAll, allIds,checkedIds]);
 
     const resetCheck = useCallback(() => {
         setCheckedIds([]);

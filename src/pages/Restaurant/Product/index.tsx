@@ -1,4 +1,4 @@
-import { useLazyQuery, useQuery } from "@apollo/client";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Select, { SingleValue } from "react-select";
 import {
@@ -23,6 +23,8 @@ import { StoresResponse } from "../../../models/store.model";
 import { GET_PRODUCT_PAGINATION } from "../../../states/product/product.queries";
 import { GET_ALL_PRODUCT_CATEGORY } from "../../../states/product/productCategory.queries";
 import { GET_ALL_STORES_OF_COMPANY } from "../../../states/store/store.queries";
+import { DELETE_MULTI_PRODUCT } from "../../../states/product/product.mutations";
+import DeleteModal from "../../../Components/Common/DeleteModal";
 
 const ListProduct = () => {
   const { userProfile } = useProfile();
@@ -36,6 +38,8 @@ const ListProduct = () => {
     value: number;
     label: string;
   }> | null>(null);
+
+  const [isShowModalDelete, setIsShowModalDelete] = useState(false);
 
   const handleStoreChange = useCallback(
     (values: SingleValue<{ value: number; label: string }> | null) => {
@@ -66,18 +70,31 @@ const ListProduct = () => {
     GET_ALL_PRODUCT_CATEGORY
   );
 
+  const [deleteMultiProduct] = useMutation(DELETE_MULTI_PRODUCT, {
+    refetchQueries: [
+      {
+        query: GET_PRODUCT_PAGINATION,
+        variables: {
+          category_id: selectedCategory?.value,
+          store_id: selectedStore?.value,
+          limit: limit,
+          offset: offset,
+        },
+      },
+    ],
+  });
   useEffect(() => {
     if (selectedCategory) {
       getProducts({
         variables: {
-          category_id: selectedCategory.value,
-          store_id: selectedStore!.value,
+          category_id: selectedCategory?.value,
+          store_id: selectedStore?.value,
           limit: limit,
           offset: offset,
         },
       });
     }
-  }, [selectedCategory, limit, offset]);
+  }, [selectedCategory, selectedStore, limit, offset]);
 
   const storeOptions = useMemo(() => {
     if (queryStoreValues.data) {
@@ -105,16 +122,33 @@ const ListProduct = () => {
     }
     return null;
   }, [queryProductsValues.data]);
+
   useEffect(() => {
     if (selectedCategory?.value && queryProductsValues.data) {
       setTotal(queryProductsValues.data.product_aggregate.aggregate.totalCount);
     }
   }, [selectedCategory?.value, queryProductsValues.data]);
+
   const { check, checkAll, isIdChecked, isCheckAll, checkedIds, resetCheck } =
     useTableCheck(products ? products.map((product) => product.id) : []);
-  console.log(total);
+
+  console.log(products?.map((product) => product.id));
+  console.log(checkedIds);
   return (
     <React.Fragment>
+      <DeleteModal
+        show={isShowModalDelete}
+        onCloseClick={() => setIsShowModalDelete(false)}
+        onDeleteClick={() => {
+          deleteMultiProduct({
+            variables: {
+              ids: checkedIds,
+            },
+          });
+          setIsShowModalDelete(false);
+          resetCheck();
+        }}
+      />
       <div className="page-content">
         <Container fluid>
           <BreadCrumb title="Quản lý món ăn" pageTitle="Quản lí món ăn" />
@@ -171,6 +205,23 @@ const ListProduct = () => {
                         </div>
                       </Col>
                     </Row>
+                    {checkedIds.length > 0 && (
+                      <Row>
+                        <Col>
+                          Đã chọn {checkedIds.length} bản ghi.{" "}
+                          <a
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setIsShowModalDelete(true);
+                            }}
+                          >
+                            Xóa
+                          </a>
+                        </Col>
+                      </Row>
+                    )}
+
                     <div className="table-responsive table-card mt-3 mb-1">
                       <table className="table align-middle table-nowrap">
                         <thead className="table-light">
