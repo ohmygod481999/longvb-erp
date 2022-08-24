@@ -1,50 +1,67 @@
 import { useQuery } from "@apollo/client";
 import { useEffect, useMemo, useState } from "react";
-import { getLoggedinUser } from "../../helpers/api_helper";
-import { GET_AUTH } from "../../states/auth/auth.queries";
-import { Auth } from "../../models/auth.model";
+import { GET_ACCOUNT_INFO, GET_AUTH } from "../../states/auth/auth.queries";
+import { AccountInfo, Auth } from "../../models/auth.model";
 import { constants } from "../constants/index";
 import { authMutations } from "../../states/auth/auth.mutations";
+import { getCookie } from "../../helpers";
+import { graphqlClient } from "../../helpers/graphql-client";
 
 const useAuth = () => {
     const { data } = useQuery<{ auth: Auth }>(GET_AUTH);
 
     const [isLoggedIn, setIsLoggedIn] = useState<Boolean | null>(null);
+    const [errorMsg, setErrorMsg] = useState("");
 
     useEffect(() => {
         if (data && data.auth) {
             setIsLoggedIn(true);
         } else {
-            const accessToken = sessionStorage.getItem(constants.AUTH_KEY);
+            const accessToken = getCookie(constants.AUTH_KEY);
+
             if (accessToken) {
                 // get user Info
-                const userInfo = {
-                    id: "7c978bbb-bb2f-4527-8851-4236c846d420",
-                    company_id: 1,
-                };
-                authMutations.updateAuth(userInfo.id, userInfo.company_id);
-                setIsLoggedIn(true);
+                graphqlClient
+                    .query({
+                        query: GET_ACCOUNT_INFO,
+                    })
+                    .then(({ data }) => {
+                        const { accountInfo }: { accountInfo: AccountInfo } =
+                            data;
+
+                        if (!accountInfo) {
+                            // user not yet registerd
+                            console.log("user not yet registerd");
+                            setErrorMsg("user not yet registerd")
+                            setIsLoggedIn(false);
+                        }
+                        const { email, facebook, id, name, phone, company_id } =
+                            accountInfo;
+
+                        // const company_id = 1;
+                        // accountInfo.company_id = company_id;
+                        authMutations.updateAuth(accountInfo);
+                        setIsLoggedIn(true);
+                    })
+                    .catch((err) => {
+                        console.log(err);
+
+                        setIsLoggedIn(false);
+                    });
             } else {
                 setIsLoggedIn(false);
             }
         }
     }, [data]);
 
-    const isLoggedInasd = useMemo(() => {
-        if (data?.auth) return true;
-        const accessToken = sessionStorage.getItem(constants.AUTH_KEY);
-        if (accessToken) {
-            // get user info
-            const userInfo = {
-                id: "7c978bbb-bb2f-4527-8851-4236c846d420",
-                company_id: 1,
-            };
-            authMutations.updateAuth(userInfo.id, userInfo.company_id);
+    const hadAccess = useMemo(() => {
+        if (data?.auth?.user?.company_id) {
+            return true;
         }
         return false;
     }, [data]);
 
-    return { isLoggedIn };
+    return { isLoggedIn, hadAccess, errorMsg };
 };
 
 const useProfile = () => {

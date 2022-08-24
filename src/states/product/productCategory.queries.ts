@@ -1,8 +1,11 @@
 import { gql } from "@apollo/client";
 
 export const GET_ALL_PRODUCT_CATEGORY = gql`
-    query getAllProductCategory {
-        product_category(order_by: { created_at: desc }) {
+    query getAllProductCategory($company_id: Int!) {
+        product_category(
+            where: { company_id: { _eq: $company_id } }
+            order_by: { created_at: desc }
+        ) {
             created_at
             id
             name
@@ -11,8 +14,8 @@ export const GET_ALL_PRODUCT_CATEGORY = gql`
     }
 `;
 export const CREATE_PRODUCT_CATEGORY = gql`
-    mutation createProductCategory($name: String!) {
-        insert_product_category_one(object: { name: $name }) {
+    mutation createProductCategory($name: String!, $company_id: Int!) {
+        insert_product_category_one(object: { name: $name, company_id: $company_id }) {
             created_at
             id
             name

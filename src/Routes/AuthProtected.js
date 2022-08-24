@@ -7,16 +7,28 @@ import { logoutUser } from "../store/actions";
 import { useAuth } from "../Components/Hooks/AuthHooks.ts";
 
 const AuthProtected = (props) => {
-    const { isLoggedIn } = useAuth();
+    const { isLoggedIn, hadAccess, errorMsg } = useAuth();
 
     if (isLoggedIn === null) {
-        return <div>Loading...</div>
+        return <div>Loading...</div>;
     }
 
     if (!isLoggedIn) {
         return (
             <Redirect
-                to={{ pathname: "/login", state: { from: props.location } }}
+                to={{
+                    pathname: `/login`,
+                    state: { from: props.location },
+                    search: `?error=${errorMsg}`
+                }}
+            />
+        );
+    }
+
+    if (!hadAccess) {
+        return (
+            <Redirect
+                to={{ pathname: "/error-500", state: { from: props.location } }}
             />
         );
     }
