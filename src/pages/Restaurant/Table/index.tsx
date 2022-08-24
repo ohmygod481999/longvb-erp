@@ -74,7 +74,7 @@ function ListTable() {
     );
 
     const { limit, offset, total, pageCount, setLimit, setOffset, setTotal } =
-        usePagination(2);
+        usePagination(10);
 
     const [deleteMultiTables] = useMutation(tableMutations.DELETE_MULTI_TABLE, {
         refetchQueries: [

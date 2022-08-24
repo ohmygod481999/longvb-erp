@@ -57,7 +57,7 @@ const ListProduct = () => {
     );
 
     const { limit, offset, total, pageCount, setLimit, setOffset, setTotal } =
-        usePagination(2);
+        usePagination(5);
     const [getProducts, queryProductsValues] = useLazyQuery<ProductsResponse>(
         GET_PRODUCT_PAGINATION
     );
