@@ -25,6 +25,7 @@ import { GET_ALL_PRODUCT_CATEGORY } from "../../../states/product/productCategor
 import { GET_ALL_STORES_OF_COMPANY } from "../../../states/store/store.queries";
 import { DELETE_MULTI_PRODUCT } from "../../../states/product/product.mutations";
 import DeleteModal from "../../../Components/Common/DeleteModal";
+import { Link } from "react-router-dom";
 
 const ListProduct = () => {
     const { userProfile } = useProfile();
@@ -82,8 +83,12 @@ const ListProduct = () => {
             {
                 query: GET_PRODUCT_PAGINATION,
                 variables: {
-                    category_id: selectedCategory?.value,
-                    store_id: selectedStore?.value,
+                    category_exp: selectedCategory
+                        ? {
+                              _eq: selectedCategory?.value,
+                          }
+                        : {},
+                    company_id: userProfile?.company_id,
                     limit: limit,
                     offset: offset,
                 },
@@ -135,7 +140,7 @@ const ListProduct = () => {
     }, [queryProductsValues.data]);
 
     useEffect(() => {
-        if (selectedCategory?.value && queryProductsValues.data) {
+        if (queryProductsValues.data) {
             setTotal(
                 queryProductsValues.data.product_aggregate.aggregate.totalCount
             );
@@ -147,6 +152,7 @@ const ListProduct = () => {
 
     console.log(products?.map((product) => product.id));
     console.log(checkedIds);
+
     return (
         <React.Fragment>
             <DeleteModal
@@ -176,17 +182,16 @@ const ListProduct = () => {
                                         Danh sách món ăn
                                     </h4>
                                     <div>
-                                        <Button
-                                            color="success"
-                                            className="add-btn me-1"
-                                            //   onClick={() =>
-                                            //       setIsShowModalAdd(true)
-                                            //   }
-                                            id="create-btn"
-                                        >
-                                            <i className="ri-add-line align-bottom me-1"></i>{" "}
-                                            Add
-                                        </Button>
+                                        <Link to={"/restaurant/food/create"}>
+                                            <Button
+                                                color="success"
+                                                className="add-btn me-1"
+                                                id="create-btn"
+                                            >
+                                                <i className="ri-add-line align-bottom me-1"></i>{" "}
+                                                Tạo
+                                            </Button>
+                                        </Link>
                                     </div>
                                 </CardHeader>
 
@@ -197,7 +202,7 @@ const ListProduct = () => {
                                                 <Select
                                                     value={selectedCategory}
                                                     onChange={handleZoneChange}
-                                                    placeholder="Chọn loai"
+                                                    placeholder="Loại món"
                                                     options={categoryOptions}
                                                     isClearable
                                                 />
@@ -230,6 +235,16 @@ const ListProduct = () => {
                                                         }}
                                                     >
                                                         Xóa
+                                                    </a>{" "}
+                                                    /{" "}
+                                                    <a
+                                                        href="#"
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            resetCheck();
+                                                        }}
+                                                    >
+                                                        Bỏ chọn
                                                     </a>
                                                 </Col>
                                             </Row>
@@ -362,13 +377,16 @@ const ListProduct = () => {
                                                                     <td>
                                                                         <div className="d-flex gap-2">
                                                                             <div className="edit">
-                                                                                <button
-                                                                                    className="btn btn-sm btn-success edit-item-btn"
-                                                                                    data-bs-toggle="modal"
-                                                                                    data-bs-target="#showModal"
+                                                                                <Link
+                                                                                    to={
+                                                                                        "/restaurant/food/" +
+                                                                                        product.id
+                                                                                    }
                                                                                 >
-                                                                                    Edit
-                                                                                </button>
+                                                                                    <button className="btn btn-sm btn-success edit-item-btn">
+                                                                                        Sửa
+                                                                                    </button>
+                                                                                </Link>
                                                                             </div>
                                                                         </div>
                                                                     </td>

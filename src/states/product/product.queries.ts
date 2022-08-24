@@ -36,3 +36,23 @@ export const GET_PRODUCT_PAGINATION = gql`
         }
     }
 `;
+
+const GET_PRODUCT_BY_ID = gql`
+    query getProductById($id: Int!) {
+        product_by_pk(id: $id) {
+            id
+            name
+            product_category {
+                id
+                name
+            }
+            description
+            price
+            thumbnail
+        }
+    }
+`;
+
+export const productQueries = {
+    GET_PRODUCT_BY_ID,
+};

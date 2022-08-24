@@ -71,7 +71,7 @@
     "react-filepond": "^7.1.1",
     "react-flatpickr": "^3.10.7",
     "react-google-login": "^5.2.2",
-    "react-hook-form": "^7.34.1",
+    "react-hook-form": "^7.34.2",
     "react-i18next": "^11.15.3",
     "react-image-lightbox": "^5.1.4",
     "react-jvectormap": "^0.0.16",
@@ -173,6 +173,7 @@
     "@types/react": "^18.0.0"
   },
   "devDependencies": {
+    "@types/react-flatpickr": "^3.8.7",
     "@types/react-router-dom": "^5.3.3",
     "babel-plugin-prismjs": "^2.1.0"
   },
