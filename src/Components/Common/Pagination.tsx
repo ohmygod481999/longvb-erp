@@ -18,15 +18,23 @@ function Pagination({
         return Math.ceil(total / limit);
     }, [total, limit]);
 
-    const handlePageClick = useCallback((event: { selected: number }) => {
-      console.log(event.selected, limit, total)
-        const newOffset = (event.selected * limit) % total;
-        console.log(
-            `User requested page number ${event.selected}, which is offset ${newOffset}`
-        );
-        setOffset(newOffset);
-    }, [limit, total]);
+    const handlePageClick = useCallback(
+        (event: { selected: number }) => {
+            const newOffset = (event.selected * limit) % total;
+            console.log(
+                `User requested page number ${event.selected}, which is offset ${newOffset}`
+            );
+            setOffset(newOffset);
+        },
+        [limit, total]
+    );
 
+    const forcePage = useMemo(() => {
+        return offset / limit;
+        
+    }, [offset, limit]);
+
+    // console.log(forcePage, offset, limit);
     return (
         <ReactPaginate
             className="pagination-wrap hstack gap-2 pagination listjs-pagination"
@@ -40,6 +48,7 @@ function Pagination({
             previousLabel={
                 <a className="page-item pagination-prev">Previous</a>
             }
+            forcePage={forcePage}
             // renderOnZeroPageCount={null}
         />
     );

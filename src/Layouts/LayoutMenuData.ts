@@ -13,6 +13,7 @@ export const useNavdata = () => {
     const [isRestaurant, setIsRestaurant] = useState(false);
     // Restaurant
     const [isStore, setIsStore] = useState(false);
+    const [isOrder, setIsOrder] = useState(false);
     
     const [isFood, setIsFood] = useState (false)
     const [isFoodCategory,setIsFoodCategory] = useState(false)
@@ -170,6 +171,19 @@ export const useNavdata = () => {
                         }
                     ]
                 },
+                {
+                    id: "order",
+                    label: "Đơn hàng",
+                    link: "/restaurant/order",
+                    isChildItem: false,
+                    click: function (e: any) {
+                        e.preventDefault();
+                        setIsOrder(!isOrder);
+                    },
+                    parentId: "restaurant",
+                    stateVariables: isOrder,
+                },
+                
             ],
         },
     ];

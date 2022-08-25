@@ -28,6 +28,7 @@ import ListTable from "../pages/Restaurant/Table";
 import ListProduct from "../pages/Restaurant/Product";
 import CreateProduct from "../pages/Restaurant/Product/CreateProduct";
 import EditProduct from "../pages/Restaurant/Product/EditProduct";
+import OrderList from "../pages/Restaurant/Order";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardEcommerce },
@@ -40,10 +41,13 @@ const authProtectedRoutes = [
   { path: "/restaurant/food/create", component: CreateProduct },
   { path: "/restaurant/food/:id", component: EditProduct },
 
-  //User Profile
-  { path: "/profile", component: UserProfile },
   { path: "/restaurant/branch", component: ListBranch },
   { path: "/restaurant/zone", component: ZoneManager },
+
+  { path: "/restaurant/order", component: OrderList },
+
+  //User Profile
+  { path: "/profile", component: UserProfile },
 
   //User Profile
   { path: "/profile", component: UserProfile },

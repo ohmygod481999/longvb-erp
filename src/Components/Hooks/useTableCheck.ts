@@ -27,6 +27,9 @@ export const useTableCheck = (allIds: number[]) => {
     );
 
     const isCheckAll = useMemo(() => {
+        if (allIds.length === 0) {
+            return false;
+        }
         let result = true;
         for (let id of allIds) {
             if (!checkedIds.includes(id)) {
@@ -38,7 +41,7 @@ export const useTableCheck = (allIds: number[]) => {
     }, [allIds, checkedIds]);
 
     const checkAll = useCallback(() => {
-        console.log(allIds)
+        console.log(allIds);
         if (isCheckAll) {
             setCheckedIds(checkedIds.filter((id) => !allIds.includes(id)));
         } else {
@@ -47,7 +50,7 @@ export const useTableCheck = (allIds: number[]) => {
             );
             setCheckedIds([...checkedIdsFromOtherPage, ...allIds]);
         }
-    }, [isCheckAll, allIds,checkedIds]);
+    }, [isCheckAll, allIds, checkedIds]);
 
     const resetCheck = useCallback(() => {
         setCheckedIds([]);
