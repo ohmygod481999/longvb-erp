@@ -120,6 +120,19 @@ export const useNavdata = () => {
                     stateVariables: isStore,
                 },
                 {
+                
+                    id: "store",
+                    label: "Bàn ăn",
+                    link: "/restaurant/table",
+                    isChildItem: false,
+                    click: function (e: any) {
+                        e.preventDefault();
+                        setIsTable(!isTable);
+                    },
+                    parentId: "restaurant",
+                    stateVariables: isTable,
+                },
+                {
                     id: "food",
                     label: "Quản trị món ăn",
                     link: "/#",
@@ -156,19 +169,6 @@ export const useNavdata = () => {
                              stateVariables: isFoods,
                         }
                     ]
-                },
-                {
-                
-                    id: "store",
-                    label: "Bàn ăn",
-                    link: "/restaurant/table",
-                    isChildItem: false,
-                    click: function (e: any) {
-                        e.preventDefault();
-                        setIsTable(!isTable);
-                    },
-                    parentId: "restaurant",
-                    stateVariables: isTable,
                 },
             ],
         },
