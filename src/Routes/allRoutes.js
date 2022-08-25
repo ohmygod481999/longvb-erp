@@ -20,7 +20,9 @@ import Logout from "../pages/Authentication/Logout";
 
 // User Profile
 import UserProfile from "../pages/Authentication/user-profile";
-import ListBranch from "../pages/Restaurant/Branch";
+import ListBranch from "../pages/Restaurant/Branch/ListBranch";
+import ZoneManager from "../pages/Restaurant/Zone/ZoneManager";
+// import ListBranch from "../pages/Restaurant/Branch";
 import Category from "../pages/Restaurant/Product/Category";
 import ListTable from "../pages/Restaurant/Table";
 import ListProduct from "../pages/Restaurant/Product";
@@ -41,6 +43,7 @@ const authProtectedRoutes = [
   //User Profile
   { path: "/profile", component: UserProfile },
   { path: "/restaurant/branch", component: ListBranch },
+  { path: "/restaurant/zone", component: ZoneManager },
 
   //User Profile
   { path: "/profile", component: UserProfile },
