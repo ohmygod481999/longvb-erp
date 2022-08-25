@@ -29,7 +29,7 @@ import _ from "lodash";
 import { toast } from "react-toastify";
 import { History } from "history";
 import ProductForm from "./ProductForm";
-import { RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps, useHistory } from "react-router-dom";
 import { productQueries } from "../../../states/product/product.queries";
 
 interface MatchParams {
@@ -37,11 +37,12 @@ interface MatchParams {
 }
 
 interface ChildComponentProps extends RouteComponentProps<MatchParams> {
-    history: History;
+    // history: History;
     /* other props for ChildComponent */
 }
 
 function EditProduct(props: ChildComponentProps) {
+    const history = useHistory()
     const { userProfile } = useProfile();
     const {
         handleSubmit,
@@ -127,7 +128,7 @@ function EditProduct(props: ChildComponentProps) {
                     autoClose: 2000,
                     className: "bg-success text-white",
                 });
-                props.history.push("/restaurant/food");
+                history.push("/restaurant/food");
             } else {
                 throw new Error();
             }

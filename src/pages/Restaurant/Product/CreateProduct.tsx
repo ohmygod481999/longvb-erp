@@ -23,15 +23,17 @@ import { graphqlClient } from "../../../helpers/graphql-client";
 import { productMutations } from "../../../states/product/product.mutations";
 import _ from "lodash";
 import { toast } from "react-toastify";
-import { History } from "history";
 import ProductForm from "./ProductForm";
+import { useHistory } from "react-router-dom";
+import { config } from "../../../config";
 
 interface ChildComponentProps {
-    history: History;
+    // history: History;
     /* other props for ChildComponent */
 }
 
 function CreateProduct(props: ChildComponentProps) {
+    const history = useHistory()
     const { userProfile } = useProfile();
     const {
         handleSubmit,
@@ -65,10 +67,11 @@ function CreateProduct(props: ChildComponentProps) {
 
     const onSubmit = async (values: any) => {
         const { name, price, category, thumbnail, description } = values;
-        if (thumbnail.length > 0) {
-            const formData = new FormData();
-            formData.append("file", thumbnail[0]);
-            try {
+        let thumbnailLocation = config.image.DEFAULT_IMAGE_URL;
+        try {
+            if (thumbnail.length > 0) {
+                const formData = new FormData();
+                formData.append("file", thumbnail[0]);
                 const uploadResponse = await axiosInstance.post(
                     "/gallery",
                     formData,
@@ -78,40 +81,43 @@ function CreateProduct(props: ChildComponentProps) {
                         },
                     }
                 );
-                const thumbnailLocation = uploadResponse.data.data.localtion;
-                const productRes = await graphqlClient.mutate({
-                    mutation: productMutations.CREATE_PRODUCT,
-                    variables: {
-                        name,
-                        price,
-                        category_id: category.value,
-                        company_id: userProfile?.company_id,
-                        description,
-                        thumbnail: thumbnailLocation,
-                    },
-                });
-                console.log(productRes);
-                if (_.get(productRes, "data.insert_product_one.id")) {
-                    // Success
-                    toast("Tạo sản phẩm thành công", {
-                        position: "top-center",
-                        hideProgressBar: true,
-                        closeOnClick: false,
-                        autoClose: 2000,
-                        className: "bg-success text-white",
-                    });
-                    props.history.push("/restaurant/food");
-                } else {
-                    throw new Error();
-                }
-            } catch (err) {
-                toast("Có lỗi xảy ra.", {
+                thumbnailLocation = uploadResponse.data.data.localtion;
+            }
+            const variables: any = {
+                name,
+                price,
+                category_id: category.value,
+                company_id: userProfile?.company_id,
+                description,
+            };
+            if (thumbnailLocation) {
+                variables.thumbnail = thumbnailLocation;
+            }
+
+            const productRes = await graphqlClient.mutate({
+                mutation: productMutations.CREATE_PRODUCT,
+                variables,
+            });
+            if (_.get(productRes, "data.insert_product_one.id")) {
+                // Success
+                toast("Tạo sản phẩm thành công", {
                     position: "top-center",
                     hideProgressBar: true,
                     closeOnClick: false,
-                    className: "bg-danger text-white",
+                    autoClose: 2000,
+                    className: "bg-success text-white",
                 });
+                history.push("/restaurant/food");
+            } else {
+                throw new Error();
             }
+        } catch (err) {
+            toast("Có lỗi xảy ra.", {
+                position: "top-center",
+                hideProgressBar: true,
+                closeOnClick: false,
+                className: "bg-danger text-white",
+            });
         }
     };
 
