@@ -25,8 +25,10 @@ import { useSelector, useDispatch } from "react-redux";
 import avatar from "../../assets/images/users/avatar-1.jpg";
 // actions
 import { editProfile, resetProfileFlag } from "../../store/actions";
+import { useProfile } from "../../Components/Hooks/AuthHooks";
 
 const UserProfile = () => {
+  const { userProfile } = useProfile();
   const dispatch = useDispatch();
 
   const [email, setemail] = useState("admin@gmail.com");
@@ -85,24 +87,24 @@ const UserProfile = () => {
         <Container fluid>
           <Row>
             <Col lg="12">
-              {error && error ? <Alert color="danger">{error}</Alert> : null}
-              {success ? <Alert color="success">Username Updated To {userName}</Alert> : null}
+              {/* {error && error ? <Alert color="danger">{error}</Alert> : null}
+              {success ? <Alert color="success">Username Updated To {userName}</Alert> : null} */}
 
               <Card>
                 <CardBody>
                   <div className="d-flex">
                     <div className="mx-3">
                       <img
-                        src={avatar}
+                        src={userProfile.avatar ? userProfile.avatar : avatar}
                         alt=""
                         className="avatar-md rounded-circle img-thumbnail"
                       />
                     </div>
                     <div className="flex-grow-1 align-self-center">
                       <div className="text-muted">
-                        <h5>{userName || "Admin"}</h5>
-                        <p className="mb-1">Email Id : {email}</p>
-                        <p className="mb-0">Id No : #{idx}</p>
+                        <h5>{userProfile.name}</h5>
+                        <p className="mb-1">Email : {userProfile.email}</p>
+                        <p className="mb-0">Id No : #{userProfile.user_erp_id}</p>
                       </div>
                     </div>
                   </div>

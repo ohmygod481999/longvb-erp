@@ -28,14 +28,21 @@ import { GoogleLogin } from "react-google-login";
 import logoLight from "../../assets/images/logo-light.png";
 // import logoLight from "../../assets/images/logo-light.png";
 //Import config
-import { facebook, google } from "../../config";
 import { useQuery } from "@apollo/client";
-import { GET_AUTH } from "../../states/auth/auth.queries";
+import { GET_AUTH, GET_OAUTH_URL } from "../../states/auth/auth.queries";
 import { authMutations } from "../../states/auth/auth.mutations";
 import { useAuth } from "../../Components/Hooks/AuthHooks";
+import { getQueryParam } from "../../helpers";
 //import images
 
 const Login = (props: any) => {
+    const { data, loading } = useQuery<{
+        oauthUrl: {
+            data: {
+                url: string;
+            };
+        };
+    }>(GET_OAUTH_URL);
 
     const [userLogin, setUserLogin] = useState({
         identifier: "longvb@gmail.com",
@@ -61,12 +68,19 @@ const Login = (props: any) => {
             //     email: "admin@themesbrand.com",
             //     password: "123456"
             // }, props.history));
-            authMutations.login(values.identifier, values.password, props.history)
+            authMutations.login(
+                values.identifier,
+                values.password,
+                props.history
+            );
             // alert(JSON.stringify(values));
         },
     });
 
-    const error = "Error";
+    const error = useMemo(() => {
+        console.log(props.location.search)
+        return getQueryParam(props.location.search, "error");
+    }, [props.location.search]);
 
     // useEffect(() => {
     //     setTimeout(() => {
@@ -114,10 +128,9 @@ const Login = (props: any) => {
                                                 Sign in to continue to Velzon.
                                             </p>
                                         </div>
-                                        {error && error ? (
+                                        {error ? (
                                             <Alert color="danger">
-                                                {" "}
-                                                {error}{" "}
+                                                {String(error)}
                                             </Alert>
                                         ) : null}
                                         <div className="p-2 mt-4">
@@ -129,7 +142,7 @@ const Login = (props: any) => {
                                                 }}
                                                 action="#"
                                             >
-                                                <div className="mb-3">
+                                                {/* <div className="mb-3">
                                                     <Label
                                                         htmlFor="email"
                                                         className="form-label"
@@ -264,6 +277,34 @@ const Login = (props: any) => {
                                                     >
                                                         Sign In
                                                     </Button>
+                                                </div> */}
+
+                                                <div className="mt-4 text-center">
+                                                    <div className="signin-other-title">
+                                                        <h5 className="fs-13 mb-4 title">
+                                                            Sign In with
+                                                        </h5>
+                                                    </div>
+                                                    {!loading && data && (
+                                                        <div>
+                                                            <a
+                                                                href={
+                                                                    data
+                                                                        .oauthUrl
+                                                                        .data
+                                                                        .url
+                                                                }
+                                                            >
+                                                                <Button
+                                                                    color="success"
+                                                                    type="button"
+                                                                    className="btn btn-success w-100"
+                                                                >
+                                                                    Smartcard
+                                                                </Button>
+                                                            </a>
+                                                        </div>
+                                                    )}
                                                 </div>
                                                 {/* 
                                                 <div className="mt-4 text-center">

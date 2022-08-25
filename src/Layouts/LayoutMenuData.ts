@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 
 enum CurrentState {
     Dashboard,
-    Restaurant,
+    Restaurant
 }
 
 export const useNavdata = () => {
@@ -11,9 +11,14 @@ export const useNavdata = () => {
     //state data
     const [isDashboard, setIsDashboard] = useState(false);
     const [isRestaurant, setIsRestaurant] = useState(false);
-
     // Restaurant
     const [isStore, setIsStore] = useState(false);
+    
+    const [isFood, setIsFood] = useState (false)
+    const [isFoodCategory,setIsFoodCategory] = useState(false)
+    const [isFoods, setIsFoods] = useState (false)
+    
+    const [isTable, setIsTable] = useState(false);
 
     const [iscurrentState, setIscurrentState] = useState<CurrentState>(
         CurrentState.Dashboard
@@ -113,6 +118,57 @@ export const useNavdata = () => {
                     },
                     parentId: "restaurant",
                     stateVariables: isStore,
+                },
+                {
+                    id: "food",
+                    label: "Quản trị món ăn",
+                    link: "/#",
+                    isChildItem: true,
+                    click: function (e: any) {
+                        e.preventDefault();
+                        setIsFood(!isFood);
+                    },
+                    parentId: "restaurant",
+                    stateVariables: isFood,
+                    childItems:[
+                        {
+                            id: "foodCategori",
+                            label: "Phân loại món ăn",
+                            link: "/restaurant/food/category",
+                            isChildItem: false,
+                             click: function (e: any) {
+                                e.preventDefault();
+                                 setIsFoodCategory(!isFoodCategory);
+                            },
+                             parentId: "food",
+                             stateVariables: isFoodCategory,
+                        },
+                        {
+                            id: "foods",
+                            label: "Món ăn",
+                            link: "/restaurant/food",
+                            isChildItem: false,
+                             click: function (e: any) {
+                                e.preventDefault();
+                                 setIsFoodCategory(!isFoods);
+                            },
+                             parentId: "food",
+                             stateVariables: isFoods,
+                        }
+                    ]
+                },
+                {
+                
+                    id: "store",
+                    label: "Bàn ăn",
+                    link: "/restaurant/table",
+                    isChildItem: false,
+                    click: function (e: any) {
+                        e.preventDefault();
+                        setIsTable(!isTable);
+                    },
+                    parentId: "restaurant",
+                    stateVariables: isTable,
                 },
             ],
         },

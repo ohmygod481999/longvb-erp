@@ -81,3 +81,19 @@ File: Custom Css File
         left: -100%;
     }
 }
+.flex{
+    display: flex;
+}
+.justify-between{
+    justify-content: space-between;
+}
+.items-center{
+    align-items: center;
+}
+.custom-img{
+    width: 10vw;
+}
+.custom-img > img{
+    max-width: 100%;
+    object-fit: cover;
+}

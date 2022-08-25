@@ -1,5 +1,4 @@
 import React, { useState, ReactNode } from "react";
-import "./styles.css";
 import { Card, CardBody, CardHeader, Col, Container, Row, Modal, Button, ModalBody, ModalHeader, ModalFooter } from "reactstrap";
 import BreadCrumb from "../../../Components/Common/BreadCrumb";
 import { Grid, _ } from "gridjs-react";
@@ -129,7 +128,7 @@ function ListBranch() {
 
     const handleDeleteStore = (store_id: number) => {
 
-        let isOkay = window.confirm(`Chắc chắn chưa bro ???`)
+        let isOkay = window.confirm(`Bạn có chắc chắn ?`)
 
         if (isOkay) {
             deleteStore({
@@ -201,11 +200,20 @@ function ListBranch() {
                     <Row>
                         <Col lg={12}>
                             <Card>
-                                <CardHeader>
-                                    <h4 className="card-title mb-0 flex list-branch-heading">
+                                <CardHeader className="card-header-has-action">
+                                    <h4 className="card-title mb-0">
                                         Danh sách chi nhánh
-                                        <button onClick={toggle} className="add-store-btn">Thêm chi nhánh</button>
                                     </h4>
+                                    <div>
+                                        <Button
+                                            color="success"
+                                            className="add-btn me-1"
+                                            onClick={toggle}
+                                        >
+                                            <i className="ri-add-line align-bottom me-1"></i>{" "}
+                                            Thêm chi nhánh
+                                        </Button>
+                                    </div>
                                 </CardHeader>
 
                                 <CardBody>

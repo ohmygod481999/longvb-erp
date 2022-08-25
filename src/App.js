@@ -2,9 +2,12 @@ import React from "react";
 
 //import Scss
 import "./assets/scss/themes.scss";
+import "./styles/index.scss"
+import 'react-toastify/dist/ReactToastify.css';
 
 //imoprt Route
 import Route from "./Routes";
+import { ToastContainer } from 'react-toastify';
 
 // Import Firebase Configuration file
 // import { initFirebaseBackend } from "./helpers/firebase_helper";
@@ -35,6 +38,7 @@ function App() {
     return (
         <React.Fragment>
             <ApolloProvider client={graphqlClient}>
+                <ToastContainer />
                 <Route />
             </ApolloProvider>
         </React.Fragment>

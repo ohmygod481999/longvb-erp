@@ -5,12 +5,12 @@ import { Redirect } from "react-router-dom";
 import DashboardEcommerce from "../pages/DashboardEcommerce";
 
 //AuthenticationInner pages
-import BasicSignIn from '../pages/AuthenticationInner/Login/BasicSignIn';
+import BasicSignIn from "../pages/AuthenticationInner/Login/BasicSignIn";
 //pages
-import Maintenance from '../pages/Pages/Maintenance/Maintenance';
-import ComingSoon from '../pages/Pages/ComingSoon/ComingSoon';
-import Basic404 from '../pages/AuthenticationInner/Errors/Basic404';
-import Error500 from '../pages/AuthenticationInner/Errors/Error500';
+import Maintenance from "../pages/Pages/Maintenance/Maintenance";
+import ComingSoon from "../pages/Pages/ComingSoon/ComingSoon";
+import Basic404 from "../pages/AuthenticationInner/Errors/Basic404";
+import Error500 from "../pages/AuthenticationInner/Errors/Error500";
 import Offlinepage from "../pages/AuthenticationInner/Errors/Offlinepage";
 
 //login
@@ -22,11 +22,26 @@ import Logout from "../pages/Authentication/Logout";
 import UserProfile from "../pages/Authentication/user-profile";
 import ListBranch from "../pages/Restaurant/Branch/ListBranch";
 import ZoneManager from "../pages/Restaurant/Zone/ZoneManager";
+// import ListBranch from "../pages/Restaurant/Branch";
+import Category from "../pages/Restaurant/Product/Category";
+import ListTable from "../pages/Restaurant/Table";
+import ListProduct from "../pages/Restaurant/Product";
+import CreateProduct from "../pages/Restaurant/Product/CreateProduct";
+import EditProduct from "../pages/Restaurant/Product/EditProduct";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardEcommerce },
 
+  //Restaurant
+  { path: "/restaurant/branch", component: ListBranch },
+  { path: "/restaurant/food/category", component: Category },
+  { path: "/restaurant/table", component: ListTable },
+  { path: "/restaurant/food", component: ListProduct },
+  { path: "/restaurant/food/create", component: CreateProduct },
+  { path: "/restaurant/food/:id", component: EditProduct },
 
+  //User Profile
+  { path: "/profile", component: UserProfile },
   { path: "/restaurant/branch", component: ListBranch },
   { path: "/restaurant/zone", component: ZoneManager },
 
@@ -56,7 +71,6 @@ const publicRoutes = [
   { path: "/coming-soon", component: ComingSoon },
 
   { path: "/offline", component: Offlinepage },
-
 ];
 
 export { authProtectedRoutes, publicRoutes };
