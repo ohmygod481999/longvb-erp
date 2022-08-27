@@ -21,6 +21,8 @@ export const useNavdata = () => {
     
     const [isTable, setIsTable] = useState(false);
 
+    const [isGallery, setIsGallery] = useState(false);
+
     const [iscurrentState, setIscurrentState] = useState<CurrentState>(
         CurrentState.Dashboard
     );
@@ -183,7 +185,18 @@ export const useNavdata = () => {
                     parentId: "restaurant",
                     stateVariables: isOrder,
                 },
-                
+                {
+                    id: "gallery",
+                    label: "Gallery",
+                    link: "/restaurant/gallery",
+                    isChildItem: false,
+                    click: function (e: any) {
+                        e.preventDefault();
+                        setIsGallery(!isGallery);
+                    },
+                    parentId: "restaurant",
+                    stateVariables: isGallery,
+                },
             ],
         },
     ];

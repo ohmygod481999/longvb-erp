@@ -29,6 +29,7 @@ import ListProduct from "../pages/Restaurant/Product";
 import CreateProduct from "../pages/Restaurant/Product/CreateProduct";
 import EditProduct from "../pages/Restaurant/Product/EditProduct";
 import OrderList from "../pages/Restaurant/Order";
+import Gallery from "../pages/Restaurant/Gallery";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardEcommerce },
@@ -45,6 +46,7 @@ const authProtectedRoutes = [
   { path: "/restaurant/zone", component: ZoneManager },
 
   { path: "/restaurant/order", component: OrderList },
+  { path: "/restaurant/gallery", component: Gallery },
 
   //User Profile
   { path: "/profile", component: UserProfile },
