@@ -154,7 +154,7 @@ const UploadImage = ({ modal_upload, tog_upload }: Props) => {
                   tog_upload();
                 }}
               >
-                Close
+                Hủy
               </button>
               <button
                 type="button"
