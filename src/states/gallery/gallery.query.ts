@@ -8,8 +8,6 @@ export const GET_ALL_GALLERY = gql`
             order_by: { created_at: desc }
         ) {
             path
-            id
-            created_at
         }
         gallery_aggregate {
             aggregate {

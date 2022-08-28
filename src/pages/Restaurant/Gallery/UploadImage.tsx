@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import React, { useState } from "react";
 import {
   Button,
@@ -13,14 +14,18 @@ import Dropzone from "react-dropzone";
 import { Link } from "react-router-dom";
 import { axiosInstance } from "../../../helpers/api_helper";
 import { toast } from "react-toastify";
+import { useProfile } from "../../../Components/Hooks/AuthHooks";
 
 interface Props {
   modal_upload: any;
   tog_upload: any;
+  setData: any;
 }
 
-const UploadImage = ({ modal_upload, tog_upload }: Props) => {
+const UploadImage = ({ modal_upload, tog_upload, setData }: Props) => {
+  const { userProfile } = useProfile();
   const [selectedFiles, setselectedFiles] = useState([]);
+
   function handleAcceptedFiles(files: any) {
     files.map((file: any) =>
       Object.assign(file, {
@@ -40,13 +45,13 @@ const UploadImage = ({ modal_upload, tog_upload }: Props) => {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
   }
-  const uploadFile = () => {
+  const uploadFile = async () => {
     console.log(111);
     if (selectedFiles.length > 0) {
       try {
         const formData = new FormData();
         formData.append("file", selectedFiles[0]);
-        const uploadResponse = axiosInstance.post("/gallery", formData, {
+        const uploadResponse = await axiosInstance.post("/gallery", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -58,6 +63,11 @@ const UploadImage = ({ modal_upload, tog_upload }: Props) => {
           autoClose: 2000,
           className: "bg-success text-white",
         });
+
+        setData((prev: any) => [
+          { path: uploadResponse.data.data.localtion },
+          ...prev,
+        ]);
       } catch (error) {
         console.log(error);
         toast("Có lỗi xảy ra.", {
@@ -160,7 +170,11 @@ const UploadImage = ({ modal_upload, tog_upload }: Props) => {
                 type="button"
                 className="btn btn-success"
                 id="add-btn"
-                onClick={uploadFile}
+                onClick={() => {
+                  uploadFile();
+                  setselectedFiles([]);
+                  tog_upload();
+                }}
               >
                 Xác nhận
               </button>
