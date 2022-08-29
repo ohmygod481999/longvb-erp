@@ -63,9 +63,12 @@ const UploadImage = ({ modal_upload, tog_upload, setData }: Props) => {
           autoClose: 2000,
           className: "bg-success text-white",
         });
-
+        console.log(uploadResponse.data.data);
         setData((prev: any) => [
-          { path: uploadResponse.data.data.localtion },
+          {
+            path: uploadResponse.data.data.localtion,
+            id: uploadResponse.data.data.id,
+          },
           ...prev,
         ]);
       } catch (error) {

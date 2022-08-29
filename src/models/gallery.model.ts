@@ -1,6 +1,7 @@
 import { GraphqlAggregate } from "./global.model";
 
 export interface gallery {
+    id: number;
     path: string;
 }
 

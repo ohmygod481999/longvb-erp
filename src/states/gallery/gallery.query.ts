@@ -7,6 +7,7 @@ export const GET_ALL_GALLERY = gql`
             offset: $offset
             order_by: { created_at: desc }
         ) {
+            id
             path
         }
         gallery_aggregate {

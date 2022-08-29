@@ -1,4 +1,4 @@
-import { useLazyQuery } from "@apollo/client";
+import { useLazyQuery, useMutation } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 import {
   Button,
@@ -18,6 +18,8 @@ import { GET_ALL_GALLERY } from "../../../states/gallery/gallery.query";
 import InfiniteScroll from "react-infinite-scroll-component";
 import UploadImage from "./UploadImage";
 import Masonry from "react-masonry-component";
+import { DELETE_MULTI_IMAGE } from "../../../states/gallery/gallery.mutations";
+import { toast } from "react-toastify";
 
 const Gallery = () => {
   const { userProfile } = useProfile();
@@ -26,22 +28,22 @@ const Gallery = () => {
   const [total, setTotal] = useState<number>(0);
   const [modal_upload, setModal_upload] = useState<boolean>(false);
   const [hasmore, setHasmore] = useState<boolean>(true);
-  const [refresh, setRefresh] = useState<boolean>(true);
 
   const [galleryValues, setGalleryValue] = useState<gallery[]>([]);
+  const [selectedValue, setSelectedValue] = useState<number[]>([]);
 
   const [getGallery, queryGalleryValues] = useLazyQuery<GalleryResponse>(
     GET_ALL_GALLERY,
     {
       onCompleted: (data) => {
-        console.log(data.gallery);
-        console.log(data.gallery_aggregate.aggregate.totalCount);
         setGalleryValue((prev) => prev.concat(data.gallery));
         setTotal(() => data.gallery_aggregate.aggregate.totalCount);
       },
       fetchPolicy: "network-only",
     }
   );
+
+  const [deleteMultiImage] = useMutation(DELETE_MULTI_IMAGE);
 
   const tog_upload = () => {
     setModal_upload(!modal_upload);
@@ -71,6 +73,42 @@ const Gallery = () => {
     }
   };
 
+  const handleSelectedImage = (id: number) => {
+    if (!selectedValue.includes(id)) {
+      setSelectedValue((prev) => prev.concat(id));
+    } else {
+      const index = selectedValue.findIndex((prev) => prev === id);
+      console.log(index);
+      setSelectedValue((prev) => prev.filter((item) => item !== id));
+    }
+  };
+  const handleDeleteImage = () => {
+    try {
+      deleteMultiImage({
+        variables: {
+          id: selectedValue,
+        },
+      });
+      selectedValue.forEach((id) => {
+        setGalleryValue((prev) => prev.filter((item) => item.id !== id));
+      });
+      toast("Xoá ảnh thành công", {
+        position: "top-center",
+        hideProgressBar: true,
+        closeOnClick: false,
+        autoClose: 2000,
+        className: "bg-success text-white",
+      });
+    } catch (error) {
+      toast("Có lỗi xảy ra.", {
+        position: "top-center",
+        hideProgressBar: true,
+        closeOnClick: false,
+        className: "bg-danger text-white",
+      });
+    }
+  };
+  console.log(selectedValue);
   return (
     <React.Fragment>
       <UploadImage
@@ -87,6 +125,20 @@ const Gallery = () => {
                 <CardHeader className="card-header-has-action">
                   <h4 className="card-title mb-0">Danh sách ảnh</h4>
                   <div>
+                    {selectedValue.length > 0 ? (
+                      <Button
+                        color="danger"
+                        className="del-btn me-1"
+                        onClick={handleDeleteImage}
+                        id="delete-btn"
+                      >
+                        <i className=" ri-delete-bin-line align-bottom me-1"></i>{" "}
+                        Xoá
+                      </Button>
+                    ) : (
+                      ""
+                    )}
+
                     <Button
                       color="success"
                       className="add-btn me-1"
@@ -129,18 +181,41 @@ const Gallery = () => {
                                 key={index}
                               >
                                 <Card className="gallery-box">
-                                  <div className="gallery-container">
-                                    <Link
+                                  <div
+                                    className="gallery-container"
+                                    style={{
+                                      position: "relative",
+                                    }}
+                                  >
+                                    {selectedValue.findIndex(
+                                      (prev) => prev === image.id
+                                    ) !== -1 ? (
+                                      <div
+                                        style={{
+                                          position: "absolute",
+                                          top: "-5px",
+                                          left: "-2px",
+                                          color: "#0ab39c",
+                                          fontSize: "2rem",
+                                        }}
+                                      >
+                                        <i className="ri-checkbox-circle-fill"></i>
+                                      </div>
+                                    ) : (
+                                      ""
+                                    )}
+                                    <div
                                       className="image-popup"
-                                      to={image.path}
-                                      title=""
+                                      onClick={() => {
+                                        handleSelectedImage(image.id);
+                                      }}
                                     >
                                       <img
                                         className="gallery-img img-fluid mx-auto"
                                         src={image.path}
                                         alt=""
                                       />
-                                    </Link>
+                                    </div>
                                   </div>
                                 </Card>
                               </Col>
