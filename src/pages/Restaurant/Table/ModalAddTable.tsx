@@ -10,11 +10,16 @@ const ModalAddTable = ({
     onClose,
     onAddSuccess,
     zone,
+    store
 }: {
     show: boolean;
     onClose: Function;
     onAddSuccess: Function;
     zone: SingleValue<{
+        value: number;
+        label: string;
+    }> | null;
+    store: SingleValue<{
         value: number;
         label: string;
     }> | null;
@@ -29,13 +34,14 @@ const ModalAddTable = ({
     const [addTable] = useMutation(tableMutations.ADD_TABLE);
 
     const onSubmit = (data: any) => {
-        if (zone) {
+        if (zone && store) {
             const { name } = data;
 
             addTable({
                 variables: {
                     name,
                     zone_id: zone.value,
+                    store_id: store.value
                 },
             }).then(() => {
                 onClose();
@@ -67,6 +73,21 @@ const ModalAddTable = ({
             </ModalHeader>
             <form>
                 <ModalBody>
+                    <div className="mb-3">
+                        <label
+                            htmlFor="customername-field"
+                            className="form-label"
+                        >
+                            Chi nhánh
+                        </label>
+                        <input
+                            type="text"
+                            id="customername-field"
+                            className="form-control"
+                            value={store?.label}
+                            disabled
+                        />
+                    </div>
                     <div className="mb-3">
                         <label
                             htmlFor="customername-field"

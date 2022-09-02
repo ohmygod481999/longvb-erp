@@ -9,8 +9,8 @@ const DELETE_MULTI_TABLE = gql`
 `;
 
 const ADD_TABLE = gql`
-    mutation addTable($name: String!, $zone_id: Int!) {
-        insert_res_table_one(object: { name: $name, zone_id: $zone_id }) {
+    mutation addTable($name: String!, $zone_id: Int!, $store_id: Int!) {
+        insert_res_table_one(object: { name: $name, zone_id: $zone_id, store_id: $store_id }) {
             id
             name
             created_at

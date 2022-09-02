@@ -183,6 +183,7 @@ function ListTable() {
                     });
                 }}
                 zone={selectedZone}
+                store={selectedStore}
             />
             <div className="page-content">
                 <Container fluid>
