@@ -75,6 +75,7 @@
     "react-hook-form": "^7.34.2",
     "react-i18next": "^11.15.3",
     "react-image-lightbox": "^5.1.4",
+    "react-infinite-scroll-component": "^6.1.0",
     "react-jvectormap": "^0.0.16",
     "react-leaflet": "^3.2.5",
     "react-masonry-component": "^6.3.0",

@@ -29,15 +29,15 @@ import {
 import { usePagination } from "../../../Components/Hooks/usePagination";
 import { useTableCheck } from "../../../Components/Hooks/useTableCheck";
 import Pagination from "../../../Components/Common/Pagination";
-import { formatDateTime, formatMoney, timeAgo } from "../../../helpers";
+import { formatMoney, timeAgo } from "../../../helpers";
 // import avatar1 from "../../../assets/images/users/avatar-1.jpg";
 // import SimpleBar from "simplebar-react";
 
-const orderStatusBadgeColor: { [x in OrderStatus]: string } = {
+const orderStatusBadgeColor = {
     created: "badge-soft-info",
     success: "badge-soft-success",
 };
-const orderStatusLabel: { [x in OrderStatus]: string } = {
+const orderStatusLabel = {
     created: "Đã tạo",
     success: "Hoàn tất",
 };
@@ -358,7 +358,12 @@ function OrderList() {
                                                 <tbody className="list form-check-all">
                                                     {queryOrdersValues.loading && (
                                                         <tr>
-                                                            <td colSpan={100} className="text-center">Loading...</td>
+                                                            <td
+                                                                colSpan={100}
+                                                                className="text-center"
+                                                            >
+                                                                Loading...
+                                                            </td>
                                                         </tr>
                                                     )}
                                                     {orders &&
@@ -407,9 +412,12 @@ function OrderList() {
                                                                     </span>
                                                                 </td>
 
-
                                                                 <td className="customer_name">
-                                                                    {order.store.name}
+                                                                    {
+                                                                        order
+                                                                            .store
+                                                                            .name
+                                                                    }
                                                                 </td>
 
                                                                 <td className="customer_name">
