@@ -17,8 +17,8 @@ export interface OrderItem {
 
 export interface Order {
     id: number;
-    status: OrderStatus;
     order_items: OrderItem[];
+    status: OrderStatus; //eslint-disable-line
     updated_at: string;
     created_at: string;
     store: Store;
