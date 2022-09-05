@@ -48,7 +48,7 @@ function createLogout(authState: ReactiveVar<Auth | null>) {
         deleteCookie(constants.AUTH_KEY);
         deleteCookie(constants.ID_TOKEN);
         // history.push("https://longvb.ddns.net:5444/oauth2/sessions/logout");
-        window.location.replace(`https://longvb.ddns.net:5444/oauth2/sessions/logout?id_token_hint=${idToken}&post_logout_redirect_uri=http://localhost:3010/login`);
+        window.location.replace(`${process.env.REACT_APP_HYDRA_URL}/oauth2/sessions/logout?id_token_hint=${idToken}&post_logout_redirect_uri=http://localhost:3010/login`);
     };
 }
 

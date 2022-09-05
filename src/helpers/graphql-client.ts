@@ -5,7 +5,7 @@ import { getCookie } from ".";
 import { constants } from "../Components/constants";
 
 const httpLink = createHttpLink({
-    uri: "https://longvb.ddns.net:8083/v1/graphql",
+    uri: process.env.REACT_APP_HASURA_URL,
 });
 
 const authLink = setContext((_, { headers }) => {
