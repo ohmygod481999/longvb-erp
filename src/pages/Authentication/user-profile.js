@@ -95,7 +95,7 @@ const UserProfile = () => {
                   <div className="d-flex">
                     <div className="mx-3">
                       <img
-                        src={userProfile.avatar ? userProfile.avatar : avatar}
+                        src={userProfile.account_info.avatar ? userProfile.account_info.avatar : avatar}
                         alt=""
                         className="avatar-md rounded-circle img-thumbnail"
                       />
@@ -104,6 +104,7 @@ const UserProfile = () => {
                       <div className="text-muted">
                         <h5>{userProfile.name}</h5>
                         <p className="mb-1">Email : {userProfile.email}</p>
+                        <p className="mb-1">Company : {userProfile.company.name}</p>
                         <p className="mb-0">Id No : #{userProfile.user_erp_id}</p>
                       </div>
                     </div>

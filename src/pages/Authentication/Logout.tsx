@@ -20,7 +20,8 @@ const Logout = (props: any) => {
     }, [dispatch]);
 
     if (isUserLogout) {
-        return <Redirect to="/login" />;
+        return <Redirect to="https://longvb.ddns.net:5444/oauth2/sessions/logout" />;
+        // return <Redirect to="/login" />;
     }
 
     return <></>;

@@ -6,12 +6,19 @@ export const GET_AUTH = gql`
             user {
                 id
                 company_id
-                name
-                facebook
+                company {
+                    id
+                    name
+                    created_at
+                }
                 email
-                phone
-                avatar
                 user_erp_id
+                account_info {
+                    name
+                    facebook
+                    phone
+                    avatar
+                }
             }
         }
     }
@@ -31,13 +38,19 @@ export const GET_ACCOUNT_INFO = gql`
     query getAccountInfo {
         accountInfo {
             company_id
+            company {
+                id
+                name
+            }
             email
-            facebook
-            name
-            phone
             id
             user_erp_id
-            avatar
+            account_info {
+                name
+                facebook
+                phone
+                avatar
+            }
         }
     }
 `;

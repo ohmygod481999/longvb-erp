@@ -6,6 +6,7 @@ import { constants } from "../constants/index";
 import { authMutations } from "../../states/auth/auth.mutations";
 import { getCookie } from "../../helpers";
 import { graphqlClient } from "../../helpers/graphql-client";
+import { axiosInstance } from "../../helpers/api_helper";
 
 const useAuth = () => {
     const { data } = useQuery<{ auth: Auth }>(GET_AUTH);
@@ -18,25 +19,30 @@ const useAuth = () => {
             setIsLoggedIn(true);
         } else {
             const accessToken = getCookie(constants.AUTH_KEY);
+            const refreshToken = getCookie(constants.REFRESH_TOKEN);
 
             if (accessToken) {
                 // get user Info
-                graphqlClient
-                    .query({
-                        query: GET_ACCOUNT_INFO,
+                axiosInstance
+                    .get("/oauth/userinfo", {
+                        headers: {
+                            Authorization: "Bearer " + accessToken,
+                            refreshtoken: refreshToken,
+                        },
+                        withCredentials: true,
                     })
                     .then(({ data }) => {
-                        const { accountInfo }: { accountInfo: AccountInfo } =
-                            data;
-
+                        const accountInfo = data;
                         if (!accountInfo) {
                             // user not yet registerd
                             console.log("user not yet registerd");
-                            setErrorMsg("user not yet registerd")
+                            setErrorMsg("user not yet registerd");
                             setIsLoggedIn(false);
                         }
-                        const { email, facebook, id, name, phone, company_id } =
+                        const { email, id, company, account_info } =
                             accountInfo;
+
+                        console.log(accountInfo);
 
                         // const company_id = 1;
                         // accountInfo.company_id = company_id;
@@ -45,9 +51,40 @@ const useAuth = () => {
                     })
                     .catch((err) => {
                         console.log(err);
+                        setErrorMsg(err);
 
                         setIsLoggedIn(false);
                     });
+                // graphqlClient
+                //     .query({
+                //         query: GET_ACCOUNT_INFO,
+                //     })
+                //     .then(({ data }) => {
+                //         const { accountInfo }: { accountInfo: AccountInfo } =
+                //             data;
+
+                //         if (!accountInfo) {
+                //             // user not yet registerd
+                //             console.log("user not yet registerd");
+                //             setErrorMsg("user not yet registerd");
+                //             setIsLoggedIn(false);
+                //         }
+                //         const { email, id, company_id, account_info } =
+                //             accountInfo;
+
+                //         console.log(accountInfo);
+
+                //         // const company_id = 1;
+                //         // accountInfo.company_id = company_id;
+                //         authMutations.updateAuth(accountInfo);
+                //         setIsLoggedIn(true);
+                //     })
+                //     .catch((err) => {
+                //         console.log(err);
+                //         setErrorMsg(err);
+
+                //         setIsLoggedIn(false);
+                //     });
             } else {
                 setIsLoggedIn(false);
             }

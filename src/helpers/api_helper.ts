@@ -5,8 +5,9 @@ import { config } from "../config";
 
 const axiosInstance = axios.create({
     baseURL: config.api.API_URL,
-    timeout: 3000,
+    timeout: 5000,
     headers: { "Content-Type": "application/json" },
+    withCredentials: true,
 });
 
 axiosInstance.interceptors.request.use(function (config) {

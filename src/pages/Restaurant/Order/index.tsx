@@ -35,10 +35,12 @@ import { formatMoney, timeAgo } from "../../../helpers";
 
 const orderStatusBadgeColor = {
     created: "badge-soft-info",
+    pending: "badge-soft-warning",
     success: "badge-soft-success",
 };
 const orderStatusLabel = {
     created: "Đã tạo",
+    pending: "Đang xử lý",
     success: "Hoàn tất",
 };
 

@@ -2,7 +2,7 @@ import { ReactiveVar } from "@apollo/client";
 import { authState } from ".";
 import { AccountInfo, Auth } from "../../models/auth.model";
 import { constants } from "../../Components/constants";
-import { deleteCookie } from "../../helpers";
+import { deleteCookie, getCookie } from "../../helpers";
 
 function createUpdateAuth(authState: ReactiveVar<Auth | null>) {
     return (accountInfo: AccountInfo) => {
@@ -20,10 +20,16 @@ function createLogin(authState: ReactiveVar<Auth | null>) {
         const dummyAccountInfo: AccountInfo = {
             id: 1,
             company_id: 1,
+            company: {
+                id: 1,
+                created_at: "",
+                name: "dummy"
+            },
             email: "test@gmail.com",
-            facebook: "facebook",
-            name: "test",
-            phone: "01012020202",
+            account_info: {
+                facebook: "facebook",
+                phone: "01012020202",
+            }
         };
         authState({
             user: dummyAccountInfo,
@@ -38,8 +44,11 @@ function createLogout(authState: ReactiveVar<Auth | null>) {
         const auth = authState();
         // get user info from server
         authState(null);
+        const idToken = getCookie(constants.ID_TOKEN)
         deleteCookie(constants.AUTH_KEY);
-        history.push("/login");
+        deleteCookie(constants.ID_TOKEN);
+        // history.push("https://longvb.ddns.net:5444/oauth2/sessions/logout");
+        window.location.replace(`https://longvb.ddns.net:5444/oauth2/sessions/logout?id_token_hint=${idToken}&post_logout_redirect_uri=http://localhost:3010/login`);
     };
 }
 

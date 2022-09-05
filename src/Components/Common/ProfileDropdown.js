@@ -28,7 +28,7 @@ const ProfileDropdown = () => {
             <Dropdown isOpen={isProfileDropdown} toggle={toggleProfileDropdown} className="ms-sm-3 header-item topbar-user">
                 <DropdownToggle tag="button" type="button" className="btn">
                     <span className="d-flex align-items-center">
-                        <img className="rounded-circle header-profile-user" src={userProfile.avatar ? userProfile.avatar : avatar1}
+                        <img className="rounded-circle header-profile-user" src={userProfile.account_info.avatar ? userProfile.account_info.avatar : avatar1}
                             alt="Header Avatar" />
                         <span className="text-start ms-xl-2">
                             <span className="d-none d-xl-inline-block ms-1 fw-medium user-name-text">{userProfile.name}</span>
