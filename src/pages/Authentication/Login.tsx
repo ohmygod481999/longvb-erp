@@ -110,7 +110,7 @@ const Login = (props: any) => {
                                         </Link>
                                     </div>
                                     <p className="mt-3 fs-15 fw-medium">
-                                        Premium Admin & Dashboard Template
+                                        Hệ thống quản trị doanh nghiệp Smartcard
                                     </p>
                                 </div>
                             </Col>
@@ -122,10 +122,10 @@ const Login = (props: any) => {
                                     <CardBody className="p-4">
                                         <div className="text-center mt-2">
                                             <h5 className="text-primary">
-                                                Welcome Back !
+                                                Chào mừng trở lại !
                                             </h5>
                                             <p className="text-muted">
-                                                Sign in to continue to Velzon.
+                                                Đăng nhập để tiếp tục với Smartcard ERP.
                                             </p>
                                         </div>
                                         {error ? (
@@ -282,7 +282,7 @@ const Login = (props: any) => {
                                                 <div className="mt-4 text-center">
                                                     <div className="signin-other-title">
                                                         <h5 className="fs-13 mb-4 title">
-                                                            Sign In with
+                                                            Đăng nhập bằng
                                                         </h5>
                                                     </div>
                                                     {!loading && data && (

@@ -145,11 +145,14 @@ function ListTable() {
     }, [queryZoneValues.data]);
 
     const tables = useMemo(() => {
+        if (!selectedZone || !selectedStore) {
+            return null
+        }
         if (queryTablesValues.data) {
             return queryTablesValues.data.res_table;
         }
         return null;
-    }, [queryTablesValues.data]);
+    }, [queryTablesValues.data, selectedZone, selectedStore]);
 
     const { check, checkAll, isIdChecked, isCheckAll, checkedIds, resetCheck } =
         useTableCheck(tables ? tables.map((table) => table.id) : []);
@@ -208,7 +211,7 @@ function ListTable() {
                                             id="create-btn"
                                         >
                                             <i className="ri-add-line align-bottom me-1"></i>{" "}
-                                            Add
+                                            Thêm
                                         </Button>
                                     </div>
                                 </CardHeader>
@@ -311,7 +314,7 @@ function ListTable() {
                                                             className="sort"
                                                             data-sort="action"
                                                         >
-                                                            Action
+                                                            Thao tác
                                                         </th>
                                                     </tr>
                                                 </thead>
@@ -357,7 +360,7 @@ function ListTable() {
                                                                                 data-bs-toggle="modal"
                                                                                 data-bs-target="#showModal"
                                                                             >
-                                                                                Edit
+                                                                                Sửa
                                                                             </button>
                                                                         </div>
                                                                     </div>
@@ -370,8 +373,8 @@ function ListTable() {
                                                 className="noresult"
                                                 style={{
                                                     display:
-                                                        tables &&
-                                                        tables.length > 0
+                                                        selectedStore &&
+                                                        selectedZone
                                                             ? "none"
                                                             : "block",
                                                 }}
@@ -380,13 +383,48 @@ function ListTable() {
                                                     {/* @ts-ignore */}
 
                                                     <h5 className="mt-2">
-                                                        Sorry! No Result Found
+                                                        Vui lòng chọn chi nhánh
+                                                        và khu vực
                                                     </h5>
                                                     <p className="text-muted mb-0">
-                                                        We've searched more than
-                                                        150+ Orders We did not
-                                                        find any orders for you
-                                                        search.
+                                                        Chọn chi nhánh và khu
+                                                        vực để xem các bàn hiện
+                                                        có.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div
+                                                className="noresult"
+                                                style={{
+                                                    display:
+                                                        selectedStore &&
+                                                        selectedZone &&
+                                                        tables &&
+                                                        tables.length == 0
+                                                            ? "block"
+                                                            : "none",
+                                                }}
+                                            >
+                                                <div className="text-center">
+                                                    {/* @ts-ignore */}
+
+                                                    <h5 className="mt-2">
+                                                        Hiện chưa có bàn nào ở{" "}
+                                                        {selectedStore?.label},{" "}
+                                                        {selectedZone?.label}
+                                                    </h5>
+                                                    <p className="text-muted mb-0">
+                                                        <a
+                                                            href="#"
+                                                            onClick={(e) => {
+                                                                e.preventDefault()
+                                                                setIsShowModalAdd(
+                                                                    true
+                                                                );
+                                                            }}
+                                                        >
+                                                            Thêm ngay.
+                                                        </a>
                                                     </p>
                                                 </div>
                                             </div>
