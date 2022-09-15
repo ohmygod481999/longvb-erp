@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { useCallback, useState } from "react";
 
 export const useModalWithData = <T>(): [
