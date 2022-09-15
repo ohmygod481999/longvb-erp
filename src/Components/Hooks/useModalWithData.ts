@@ -1,4 +1,4 @@
-// @ts-nocheck
+/* eslint-disable */
 
 import { useCallback, useState } from "react";
 

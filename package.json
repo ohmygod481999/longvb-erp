@@ -112,7 +112,7 @@
   "scripts": {
     "dev": "react-scripts start",
     "start": "serve -s build",
-    "build": "react-scripts build --max_old_space_size=8000 build",
+    "build": "DISABLE_ESLINT_PLUGIN=true react-scripts build --max_old_space_size=8000 build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint .",
