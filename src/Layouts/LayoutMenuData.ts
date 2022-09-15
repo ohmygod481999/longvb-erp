@@ -74,6 +74,12 @@ export const useNavdata = () => {
             },
             subItems: [
                 {
+                    id: "welcome",
+                    label: "Trang chủ",
+                    link: "/welcome",
+                    parentId: "dashboard",
+                },
+                {
                     id: "Dashboard",
                     label: "Dashboard",
                     link: "/dashboard",

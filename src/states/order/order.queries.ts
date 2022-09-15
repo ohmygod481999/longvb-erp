@@ -41,6 +41,10 @@ export const GET_ORDERS_PAGINATION = gql`
                 id
                 name
             }
+            res_table {
+                id
+                name
+            }
             created_at
         }
         order_aggregate(

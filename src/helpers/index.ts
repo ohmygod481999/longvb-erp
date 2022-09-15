@@ -39,8 +39,22 @@ export function getCookie(cookieName: string) {
 }
 
 export function deleteCookie(name: string) {
+    const fullHost = window.location.host;
+    const [host, port] = fullHost.split(":");
+    let domain = "";
+    if (host !== "localhost") {
+        const domainParts = host.split(".");
+        if (domainParts.length > 2) {
+            const [_, ...usingParts] = domainParts;
+            domain = "." + usingParts.join(".");
+        } else domain = "." + domainParts.join(".");
+    }
+
     document.cookie =
-        name + "=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+        name +
+        `=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; ${
+            domain ? `domain=${domain}` : ""
+        }`;
 }
 
 export function getQueryParam(locationSearch: string, paramName: string) {

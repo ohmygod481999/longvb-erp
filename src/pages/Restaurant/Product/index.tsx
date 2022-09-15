@@ -26,6 +26,7 @@ import { GET_ALL_STORES_OF_COMPANY } from "../../../states/store/store.queries";
 import { DELETE_MULTI_PRODUCT } from "../../../states/product/product.mutations";
 import DeleteModal from "../../../Components/Common/DeleteModal";
 import { Link } from "react-router-dom";
+import { formatMoney } from "../../../helpers";
 
 const ListProduct = () => {
     const { userProfile } = useProfile();
@@ -107,6 +108,7 @@ const ListProduct = () => {
                 limit: limit,
                 offset: offset,
             },
+            fetchPolicy: "network-only"
         });
     }, [selectedCategory, selectedStore, limit, offset]);
 
@@ -285,6 +287,12 @@ const ListProduct = () => {
                                                             className="sort"
                                                             data-sort="customer_name"
                                                         >
+                                                            Phân loại
+                                                        </th>
+                                                        <th
+                                                            className="sort"
+                                                            data-sort="customer_name"
+                                                        >
                                                             Mô tả
                                                         </th>
                                                         <th
@@ -350,13 +358,20 @@ const ListProduct = () => {
                                                                     </td>
                                                                     <td className="customer_name">
                                                                         {
-                                                                            product.description
+                                                                            product
+                                                                                .product_category
+                                                                                .name
                                                                         }
                                                                     </td>
                                                                     <td className="customer_name">
                                                                         {
-                                                                            product.price
+                                                                            product.description
                                                                         }
+                                                                    </td>
+                                                                    <td className="customer_name">
+                                                                        {formatMoney(
+                                                                            product.price
+                                                                        )}
                                                                     </td>
                                                                     <td className="customer_name custom-img">
                                                                         <img

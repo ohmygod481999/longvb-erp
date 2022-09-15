@@ -117,7 +117,6 @@ function ListBranch() {
     const [updateStore, updateStoreResponse] = useMutation(UPDATE_STORE)
 
     const handleCreateStore = () => {
-        console.log(storeName)
         createStore({
             variables: {
                 name: storeName,
@@ -172,14 +171,6 @@ function ListBranch() {
                         <div className="mb-3">
                             <label htmlFor="customername-field" className="form-label">Tên chi nhánh</label>
                             <input onChange={(e:any) => setStoreName(e.target.value)} type="text" id="customername-field" className="form-control" placeholder="Nhập tên chi nhánh" required />
-                        </div>
-
-                        <div>
-                            <label htmlFor="status-field" className="form-label">Công ty</label>
-                            <select onChange={(e: any) => setCompanyId(Number(e.target.value))} className="form-control" data-trigger name="status-field" id="status-field" >
-                                {companies.data?.company?.map((c: any, index:number) => <option key={index} value={c.id}>{c.id}-{c.name}</option>)}
-
-                            </select>
                         </div>
                     </ModalBody>
                     <ModalFooter>

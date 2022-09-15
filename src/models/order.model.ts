@@ -1,6 +1,7 @@
 import { GraphqlAggregate } from "./global.model";
 import { Product } from "./product.model";
 import { Store } from "./store.model";
+import { Table } from "./table.model";
 
 export enum OrderStatus {
     CREATED = "created",
@@ -22,6 +23,7 @@ export interface Order {
     updated_at: string;
     created_at: string;
     store: Store;
+    res_table: Table;
 }
 
 export interface OrdersResponse {

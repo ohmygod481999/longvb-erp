@@ -347,6 +347,12 @@ function OrderList() {
                                                             className="sort"
                                                             data-sort="customer_name"
                                                         >
+                                                            Bàn
+                                                        </th>
+                                                        <th
+                                                            className="sort"
+                                                            data-sort="customer_name"
+                                                        >
                                                             Ngày tạo
                                                         </th>
                                                         <th
@@ -418,6 +424,13 @@ function OrderList() {
                                                                     {
                                                                         order
                                                                             .store
+                                                                            .name
+                                                                    }
+                                                                </td>
+                                                                <td className="customer_name">
+                                                                    {
+                                                                        order
+                                                                            .res_table
                                                                             .name
                                                                     }
                                                                 </td>

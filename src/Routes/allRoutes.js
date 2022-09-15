@@ -30,9 +30,11 @@ import CreateProduct from "../pages/Restaurant/Product/CreateProduct";
 import EditProduct from "../pages/Restaurant/Product/EditProduct";
 import OrderList from "../pages/Restaurant/Order";
 import Gallery from "../pages/Restaurant/Gallery";
+import WelComePage from "../pages/WelcomePage";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardEcommerce },
+  { path: "/welcome", component: WelComePage },
 
   //Restaurant
   { path: "/restaurant/branch", component: ListBranch },
@@ -59,7 +61,7 @@ const authProtectedRoutes = [
   {
     path: "/",
     exact: true,
-    component: () => <Redirect to="/dashboard" />,
+    component: () => <Redirect to="/welcome" />,
   },
 ];
 

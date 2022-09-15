@@ -27,7 +27,7 @@ const Gallery = () => {
   const [start, setStart] = useState<number>(0);
   const [total, setTotal] = useState<number>(0);
   const [modal_upload, setModal_upload] = useState<boolean>(false);
-  const [hasmore, setHasmore] = useState<boolean>(true);
+  const [hasmore, setHasmore] = useState<boolean>(false);
 
   const [galleryValues, setGalleryValue] = useState<gallery[]>([]);
   const [selectedValue, setSelectedValue] = useState<number[]>([]);

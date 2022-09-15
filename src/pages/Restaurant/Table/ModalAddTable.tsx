@@ -1,16 +1,19 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@apollo/client";
 import { tableMutations } from "../../../states/table/table.mutations";
 import { SingleValue } from "react-select";
+import { useProfile } from "../../../Components/Hooks/AuthHooks";
+import { useQueryStore } from "../../../Components/Hooks/useQueryStore";
+import { useQueryZone } from "../../../Components/Hooks/useQueryZone";
 
 const ModalAddTable = ({
     show,
     onClose,
     onAddSuccess,
     zone,
-    store
+    store,
 }: {
     show: boolean;
     onClose: Function;
@@ -24,6 +27,8 @@ const ModalAddTable = ({
         label: string;
     }> | null;
 }) => {
+    const { userProfile } = useProfile();
+
     const {
         register,
         handleSubmit,
@@ -31,23 +36,38 @@ const ModalAddTable = ({
         formState: { errors },
     } = useForm();
 
+    const stores = useQueryStore();
+
+    const watchStore = watch("store_id");
+
+    const storeId = useMemo(() => {
+        if (watchStore) return Number(watchStore);
+        else if (stores) {
+            return stores[0].id;
+        }
+        return undefined;
+    }, [stores, watchStore]);
+
+    const zones = useQueryZone(storeId);
+
     const [addTable] = useMutation(tableMutations.ADD_TABLE);
 
     const onSubmit = (data: any) => {
-        if (zone && store) {
-            const { name } = data;
+        const { name, store_id, zone_id } = data;
 
-            addTable({
-                variables: {
-                    name,
-                    zone_id: zone.value,
-                    store_id: store.value
-                },
-            }).then(() => {
-                onClose();
-                onAddSuccess(zone.value);
-            });
-        }
+        addTable({
+            variables: {
+                name,
+                zone_id: zone_id,
+                store_id: store_id,
+                company_id: userProfile?.company_id,
+            },
+        }).then(() => {
+            onClose();
+            onAddSuccess();
+        });
+        // if (zone && store) {
+        // }
     };
 
     return (
@@ -80,13 +100,20 @@ const ModalAddTable = ({
                         >
                             Chi nhánh
                         </label>
-                        <input
-                            type="text"
-                            id="customername-field"
+                        <select
+                            {...register("store_id")}
                             className="form-control"
-                            value={store?.label}
-                            disabled
-                        />
+                            // value={store?.label}
+                            // disabled
+                        >
+                            {stores?.map((store) => {
+                                return (
+                                    <option value={store.id} key={store.id}>
+                                        {store.name}
+                                    </option>
+                                );
+                            })}
+                        </select>
                     </div>
                     <div className="mb-3">
                         <label
@@ -95,13 +122,19 @@ const ModalAddTable = ({
                         >
                             Khu vực
                         </label>
-                        <input
-                            type="text"
+                        <select
+                            {...register("zone_id")}
                             id="customername-field"
                             className="form-control"
-                            value={zone?.label}
-                            disabled
-                        />
+                            // value={zone?.label}
+                            // disabled
+                        >
+                            {zones?.map((zone) => (
+                                <option value={zone.id} key={zone.id}>
+                                    {zone.name}
+                                </option>
+                            ))}
+                        </select>
                     </div>
                     <div className="mb-3">
                         <label

@@ -42,13 +42,34 @@ const Categori = () => {
     const [categoryname, setCategoryName] = useState<string>("");
 
     const [deleteProductCategory] = useMutation(DELETE_PRODUCT_CATEGORY, {
-        refetchQueries: [{ query: GET_ALL_PRODUCT_CATEGORY }],
+        refetchQueries: [
+            {
+                query: GET_ALL_PRODUCT_CATEGORY,
+                variables: {
+                    company_id: userProfile?.company_id,
+                },
+            },
+        ],
     });
     const [createProductCategory] = useMutation(CREATE_PRODUCT_CATEGORY, {
-        refetchQueries: [{ query: GET_ALL_PRODUCT_CATEGORY }],
+        refetchQueries: [
+            {
+                query: GET_ALL_PRODUCT_CATEGORY,
+                variables: {
+                    company_id: userProfile?.company_id,
+                },
+            },
+        ],
     });
     const [updateProductCategory] = useMutation(UPDATE_PRODUCT_CATEGORY, {
-        refetchQueries: [{ query: GET_ALL_PRODUCT_CATEGORY }],
+        refetchQueries: [
+            {
+                query: GET_ALL_PRODUCT_CATEGORY,
+                variables: {
+                    company_id: userProfile?.company_id,
+                },
+            },
+        ],
     });
 
     const { data, loading, error } = useQuery<ProductCategoryResponse>(
@@ -76,7 +97,7 @@ const Categori = () => {
         createProductCategory({
             variables: {
                 name: categoryname,
-                company_id: userProfile?.company_id
+                company_id: userProfile?.company_id,
             },
         });
     };
@@ -123,7 +144,7 @@ const Categori = () => {
                                             onClick={() => tog_add()}
                                         >
                                             <i className="ri-add-line align-bottom me-1"></i>{" "}
-                                            Add
+                                            Thêm
                                         </Button>
                                     </div>
                                 </CardHeader>
@@ -192,7 +213,7 @@ const Categori = () => {
                                                                         data-bs-toggle="modal"
                                                                         data-bs-target="#showModal"
                                                                     >
-                                                                        Edit
+                                                                        Sửa
                                                                     </button>
                                                                 </div>
                                                                 <div
@@ -213,7 +234,7 @@ const Categori = () => {
                                                                     }}
                                                                 >
                                                                     <button className="btn btn-sm btn-danger remove-item-btn">
-                                                                        Remove
+                                                                        Xóa
                                                                     </button>
                                                                 </div>
                                                             </div>
@@ -311,7 +332,7 @@ const Categori = () => {
                                     setmodal_add(false);
                                 }}
                             >
-                                Them loai mon
+                                Thêm
                             </button>
                         </div>
                     </ModalFooter>

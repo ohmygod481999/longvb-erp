@@ -24,17 +24,26 @@ import {
 import { useQuery, useMutation } from "@apollo/client";
 import { formatDateTime } from "../../../helpers";
 import { Grid, _ } from "gridjs-react";
+import { useProfile } from "../../../Components/Hooks/AuthHooks";
 
 export default function ZoneManager() {
+    const { userProfile } = useProfile();
+
     const [modal, setModal] = useState<boolean>(false);
     const [searchInput, setSearchInput] = useState<string>("");
     const [editModal, setEditModal] = useState<boolean>(false);
     const [zoneName, setZoneName] = useState<string>("");
     const [storeId, setStoreId] = useState<string>("");
     const [zonesData, setZonesData] = useState<any>({});
-    const stores = useQuery(GET_ALL_STORES, { variables: {} }); // stores.data
-    const zones = useQuery(GET_ALL_ZONE, {
-        variables: {},
+    const stores = useQuery(GET_ALL_STORES, {
+        variables: {
+            company_id: userProfile?.company_id,
+        },
+    }); // stores.data
+    const queryZoneValues = useQuery(GET_ALL_ZONE, {
+        variables: {
+            company_id: userProfile?.company_id,
+        },
         onCompleted: (data) => setZonesData(data),
     }); // zones.data
     const [createZone, createZoneResponse] = useMutation(CREATE_ZONE);
@@ -42,12 +51,20 @@ export default function ZoneManager() {
     const [updateZone, updateZoneResponse] = useMutation(UPDATE_ZONE);
 
     const handleCreateZone = () => {
+        // console.log(zoneName, storeId);
+        // return;
         if (storeId) {
             createZone({
                 variables: {
                     name: zoneName,
                     store_id: Number(storeId),
+                    company_id: userProfile?.company_id,
                 },
+            }).then(() => {
+                setModal(false);
+                queryZoneValues.refetch({
+                    company_id: userProfile?.company_id,
+                });
             });
         }
     };
@@ -98,88 +115,81 @@ export default function ZoneManager() {
                             aria-label="Close"
                         ></Button>
                     </ModalHeader>
-                    <form>
-                        <ModalBody>
-                            <div
-                                className="mb-3"
-                                id="modal-id"
-                                style={{ display: "none" }}
+
+                    <ModalBody>
+                        <div
+                            className="mb-3"
+                            id="modal-id"
+                            style={{ display: "none" }}
+                        >
+                            <label htmlFor="id-field" className="form-label">
+                                ID
+                            </label>
+                            <input
+                                type="text"
+                                id="id-field"
+                                className="form-control"
+                                placeholder="ID"
+                                readOnly
+                            />
+                        </div>
+
+                        <div className="mb-3">
+                            <label
+                                htmlFor="customername-field"
+                                className="form-label"
                             >
-                                <label
-                                    htmlFor="id-field"
-                                    className="form-label"
-                                >
-                                    ID
-                                </label>
-                                <input
-                                    type="text"
-                                    id="id-field"
-                                    className="form-control"
-                                    placeholder="ID"
-                                    readOnly
-                                />
-                            </div>
+                                Tên khu vực
+                            </label>
+                            <input
+                                onChange={(e: any) =>
+                                    setZoneName(e.target.value)
+                                }
+                                type="text"
+                                id="customername-field"
+                                className="form-control"
+                                placeholder="Nhập tên khu vực"
+                                required
+                            />
+                        </div>
 
-                            <div className="mb-3">
-                                <label
-                                    htmlFor="customername-field"
-                                    className="form-label"
-                                >
-                                    Tên khu vực
-                                </label>
-                                <input
-                                    onChange={(e: any) =>
-                                        setZoneName(e.target.value)
-                                    }
-                                    type="text"
-                                    id="customername-field"
-                                    className="form-control"
-                                    placeholder="Nhập tên khu vực"
-                                    required
-                                />
-                            </div>
-
-                            <div>
-                                <label
-                                    htmlFor="status-field"
-                                    className="form-label"
-                                >
-                                    Chi nhánh
-                                </label>
-                                <select
-                                    onChange={(e: any) =>
-                                        setStoreId(e.target.value)
-                                    }
-                                    className="form-control"
-                                    data-trigger
-                                    name="status-field"
-                                    id="status-field"
-                                >
-                                    <option value="">{""}</option>
-                                    {stores?.data?.store &&
-                                        stores.data.store.map((store: any) => (
-                                            <option
-                                                key={store.id}
-                                                value={store.id}
-                                            >
-                                                {store.name}
-                                            </option>
-                                        ))}
-                                </select>
-                            </div>
-                        </ModalBody>
-                        <ModalFooter>
-                            <div className="hstack gap-2 justify-content-end">
-                                <button
-                                    onClick={handleCreateZone}
-                                    type="submit"
-                                    className="btn btn-success"
-                                >
-                                    Thêm khu vực
-                                </button>
-                            </div>
-                        </ModalFooter>
-                    </form>
+                        <div>
+                            <label
+                                htmlFor="status-field"
+                                className="form-label"
+                            >
+                                Chi nhánh
+                            </label>
+                            <select
+                                onChange={(e: any) =>
+                                    setStoreId(e.target.value)
+                                }
+                                className="form-control"
+                                data-trigger
+                                name="status-field"
+                                id="status-field"
+                            >
+                                <option value="">{""}</option>
+                                {stores?.data?.store &&
+                                    stores.data.store.map((store: any) => (
+                                        <option key={store.id} value={store.id}>
+                                            {store.name}
+                                        </option>
+                                    ))}
+                            </select>
+                        </div>
+                    </ModalBody>
+                    <ModalFooter>
+                        <div className="hstack gap-2 justify-content-end">
+                            <button
+                                onClick={handleCreateZone}
+                                type="submit"
+                                className="btn btn-success"
+                            >
+                                Thêm khu vực
+                            </button>
+                        </div>
+                    </ModalFooter>
                 </Modal>
 
                 <Modal

@@ -39,14 +39,14 @@ function Pagination({
         <ReactPaginate
             className="pagination-wrap hstack gap-2 pagination listjs-pagination"
             breakLabel="..."
-            nextLabel={<a className="page-item pagination-prev">Next</a>}
+            nextLabel={<a className="page-item pagination-prev">Trang sau</a>}
             onPageChange={handlePageClick}
             pageRangeDisplayed={5}
             pageCount={pageCount}
             activeClassName="active"
             pageLinkClassName="page"
             previousLabel={
-                <a className="page-item pagination-prev">Previous</a>
+                <a className="page-item pagination-prev">Trang trước</a>
             }
             forcePage={forcePage}
             // renderOnZeroPageCount={null}

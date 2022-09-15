@@ -17,13 +17,17 @@ import { useProfile } from "../../../Components/Hooks/AuthHooks";
 import { StoresResponse } from "../../../models/store.model";
 import { GET_ALL_STORES_OF_COMPANY } from "../../../states/store/store.queries";
 import { GET_TABLES_PAGINATION } from "../../../states/table/table.queries";
-import { TablesResponse } from "../../../models/table.model";
+import { Table, TablesResponse } from "../../../models/table.model";
 import { usePagination } from "../../../Components/Hooks/usePagination";
 import Pagination from "../../../Components/Common/Pagination";
 import { useTableCheck } from "../../../Components/Hooks/useTableCheck";
 import { tableMutations } from "../../../states/table/table.mutations";
 import DeleteModal from "../../../Components/Common/DeleteModal";
 import ModalAddTable from "./ModalAddTable";
+import { config } from "../../../config";
+import { toast } from "react-toastify";
+import { useModalWithData } from "../../../Components/Hooks/useModalWithData";
+import ModalQrTable from "./ModalQrTable";
 
 function ListTable() {
     const { userProfile } = useProfile();
@@ -39,8 +43,15 @@ function ListTable() {
     }> | null>(null);
 
     const [isShowModalDelete, setIsShowModalDelete] = useState(false);
-    const [isShowModalAdd, setIsShowModalAdd] = useState(false);
 
+    const [isShowModalAdd, setIsShowModalAdd] = useState(false);
+    const [
+        isShowModalQr,
+        showModalQr,
+        closeModalQr,
+        modalDataQr,
+    ] = useModalWithData<Table>();
+    
     const handleStoreChange = useCallback(
         (values: SingleValue<{ value: number; label: string }> | null) => {
             setSelectedStore(values);
@@ -76,21 +87,10 @@ function ListTable() {
     const { limit, offset, total, pageCount, setLimit, setOffset, setTotal } =
         usePagination(10);
 
-    const [deleteMultiTables] = useMutation(tableMutations.DELETE_MULTI_TABLE, {
-        refetchQueries: [
-            {
-                query: GET_TABLES_PAGINATION,
-                variables: {
-                    zone_id: selectedZone?.value,
-                    limit: limit,
-                    offset: offset,
-                },
-            },
-        ],
-    });
+    const [deleteMultiTables] = useMutation(tableMutations.DELETE_MULTI_TABLE);
 
     const [getTables, queryTablesValues] = useLazyQuery<TablesResponse>(
-        GET_TABLES_PAGINATION
+        GET_TABLES_PAGINATION,
     );
 
     useEffect(() => {
@@ -104,17 +104,55 @@ function ListTable() {
         }
     }, [selectedStore]);
 
+    const fetchTables = useCallback(
+        (getTables: Function) => {
+            if (!selectedZone && !selectedStore) {
+                getTables({
+                    variables: {
+                        where: {
+                            company_id: {
+                                _eq: userProfile?.company_id,
+                            },
+                        },
+                        limit: limit,
+                        offset: offset,
+                    },
+                    fetchPolicy: "network-only"
+                });
+            } else if (selectedStore && !selectedZone) {
+                getTables({
+                    variables: {
+                        where: {
+                            store_id: {
+                                _eq: selectedStore.value,
+                            },
+                        },
+                        limit: limit,
+                        offset: offset,
+                    },
+                    fetchPolicy: "network-only"
+                });
+            } else if (selectedZone) {
+                getTables({
+                    variables: {
+                        where: {
+                            zone_id: {
+                                _eq: selectedZone.value,
+                            },
+                        },
+                        limit: limit,
+                        offset: offset,
+                    },
+                    fetchPolicy: "network-only"
+                });
+            }
+        },
+        [selectedZone, selectedStore, limit, offset]
+    );
+
     useEffect(() => {
-        if (selectedZone) {
-            getTables({
-                variables: {
-                    zone_id: selectedZone.value,
-                    limit: limit,
-                    offset: offset,
-                },
-            });
-        }
-    }, [selectedZone, limit, offset]);
+        fetchTables(getTables);
+    }, [selectedZone, selectedStore, limit, offset]);
 
     useEffect(() => {
         if (selectedZone?.value && queryTablesValues.data) {
@@ -145,9 +183,9 @@ function ListTable() {
     }, [queryZoneValues.data]);
 
     const tables = useMemo(() => {
-        if (!selectedZone || !selectedStore) {
-            return null
-        }
+        // if (!selectedZone || !selectedStore) {
+        //     return null;
+        // }
         if (queryTablesValues.data) {
             return queryTablesValues.data.res_table;
         }
@@ -167,23 +205,50 @@ function ListTable() {
                         variables: {
                             ids: checkedIds,
                         },
+                    }).then(() => {
+                        fetchTables(queryTablesValues.refetch);
                     });
                     setIsShowModalDelete(false);
                     resetCheck();
                 }}
             />
+            <ModalQrTable
+                show={isShowModalQr}
+                onClose={closeModalQr}
+                table={modalDataQr}
+            />
             <ModalAddTable
                 show={isShowModalAdd}
                 onClose={() => setIsShowModalAdd(false)}
-                onAddSuccess={(zone_id: number) => {
-                    getTables({
-                        variables: {
-                            zone_id: zone_id,
-                            limit: limit,
-                            offset: offset,
-                        },
-                        fetchPolicy: "network-only",
-                    });
+                onAddSuccess={() => {
+                    if (!selectedZone && !selectedStore) {
+                        console.log("run");
+                        queryTablesValues.refetch({
+                            variables: {
+                                where: {
+                                    company_id: {
+                                        _eq: userProfile?.company_id,
+                                    },
+                                },
+                                limit: limit,
+                                offset: offset,
+                            },
+                            nextFetchPolicy: "network-only",
+                        });
+                    } else if (selectedZone) {
+                        queryTablesValues.refetch({
+                            variables: {
+                                where: {
+                                    zone_id: {
+                                        _eq: selectedZone.value,
+                                    },
+                                },
+                                limit: limit,
+                                offset: offset,
+                            },
+                            nextFetchPolicy: "network-only",
+                        });
+                    }
                 }}
                 zone={selectedZone}
                 store={selectedStore}
@@ -221,6 +286,7 @@ function ListTable() {
                                         <Row className="g-4 mb-3">
                                             <Col className="col-lg-3 col-md-4">
                                                 <Select
+                                                    isClearable
                                                     value={selectedStore}
                                                     onChange={handleStoreChange}
                                                     placeholder="Chọn chi nhánh"
@@ -230,6 +296,7 @@ function ListTable() {
                                             {selectedStore && (
                                                 <Col className="col-lg-3 col-md-4">
                                                     <Select
+                                                        isClearable
                                                         value={selectedZone}
                                                         onChange={
                                                             handleZoneChange
@@ -300,13 +367,31 @@ function ListTable() {
                                                         </th>
                                                         <th
                                                             className="sort"
-                                                            data-sort="customer_name"
+                                                            // data-sort="customer_name"
+                                                        >
+                                                            ID
+                                                        </th>
+                                                        <th
+                                                            className="sort"
+                                                            // data-sort="customer_name"
                                                         >
                                                             Tên bàn
                                                         </th>
                                                         <th
                                                             className="sort"
-                                                            data-sort="customer_name"
+                                                            // data-sort="customer_name"
+                                                        >
+                                                            Chi nhánh
+                                                        </th>
+                                                        <th
+                                                            className="sort"
+                                                            // data-sort="customer_name"
+                                                        >
+                                                            Khu vực
+                                                        </th>
+                                                        <th
+                                                            className="sort"
+                                                            // data-sort="customer_name"
                                                         >
                                                             Trạng thái
                                                         </th>
@@ -344,7 +429,26 @@ function ListTable() {
                                                                 </th>
 
                                                                 <td className="customer_name">
+                                                                    {table.id}
+                                                                </td>
+
+                                                                <td className="customer_name">
                                                                     {table.name}
+                                                                </td>
+
+                                                                <td className="customer_name">
+                                                                    {
+                                                                        table
+                                                                            .store
+                                                                            .name
+                                                                    }
+                                                                </td>
+                                                                <td className="customer_name">
+                                                                    {
+                                                                        table
+                                                                            .res_zone
+                                                                            .name
+                                                                    }
                                                                 </td>
 
                                                                 <td className="status">
@@ -363,13 +467,46 @@ function ListTable() {
                                                                                 Sửa
                                                                             </button>
                                                                         </div>
+                                                                        <button className="btn btn-sm btn-primary edit-item-btn" onClick={() => showModalQr(table)}>
+                                                                            Mã
+                                                                            QR
+                                                                        </button>
+
+                                                                        <button
+                                                                            className="btn btn-sm btn-info edit-item-btn"
+                                                                            onClick={() => {
+                                                                                navigator.clipboard.writeText(
+                                                                                    config.ORDER_HOST +
+                                                                                        `/#/${userProfile?.company_id}/${table.store.id}/${table.id}/home`
+                                                                                );
+                                                                                toast(
+                                                                                    "Copy thành công",
+                                                                                    {
+                                                                                        position:
+                                                                                            "top-center",
+                                                                                        hideProgressBar:
+                                                                                            true,
+                                                                                        closeOnClick:
+                                                                                            false,
+                                                                                        autoClose: 2000,
+                                                                                        className:
+                                                                                            "bg-success text-white",
+                                                                                    }
+                                                                                );
+                                                                            }}
+                                                                        >
+                                                                            Copy
+                                                                            link
+                                                                            đặt
+                                                                            hàng
+                                                                        </button>
                                                                     </div>
                                                                 </td>
                                                             </tr>
                                                         ))}
                                                 </tbody>
                                             </table>
-                                            <div
+                                            {/* <div
                                                 className="noresult"
                                                 style={{
                                                     display:
@@ -380,8 +517,6 @@ function ListTable() {
                                                 }}
                                             >
                                                 <div className="text-center">
-                                                    {/* @ts-ignore */}
-
                                                     <h5 className="mt-2">
                                                         Vui lòng chọn chi nhánh
                                                         và khu vực
@@ -392,13 +527,11 @@ function ListTable() {
                                                         có.
                                                     </p>
                                                 </div>
-                                            </div>
+                                            </div> */}
                                             <div
                                                 className="noresult"
                                                 style={{
                                                     display:
-                                                        selectedStore &&
-                                                        selectedZone &&
                                                         tables &&
                                                         tables.length == 0
                                                             ? "block"
@@ -417,7 +550,7 @@ function ListTable() {
                                                         <a
                                                             href="#"
                                                             onClick={(e) => {
-                                                                e.preventDefault()
+                                                                e.preventDefault();
                                                                 setIsShowModalAdd(
                                                                     true
                                                                 );

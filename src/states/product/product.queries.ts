@@ -18,6 +18,10 @@ export const GET_PRODUCT_PAGINATION = gql`
         ) {
             id
             name
+            product_category {
+                id
+                name
+            }
             description
             price
             status

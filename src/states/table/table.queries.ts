@@ -1,15 +1,23 @@
 import { gql } from "@apollo/client";
 
 export const GET_TABLES_PAGINATION = gql`
-    query getTablePagination($zone_id: Int!, $limit: Int!, $offset: Int!) {
+    query getTablePagination(
+        $where: res_table_bool_exp!
+        $limit: Int!
+        $offset: Int!
+    ) {
         res_table(
-            where: { zone_id: { _eq: $zone_id } }
+            where: $where
             limit: $limit
             offset: $offset
             order_by: { created_at: desc }
         ) {
             id
             name
+            store {
+                id
+                name
+            }
             res_zone {
                 id
                 name
@@ -17,10 +25,18 @@ export const GET_TABLES_PAGINATION = gql`
             }
             created_at
         }
-        res_table_aggregate(where: { zone_id: { _eq: $zone_id } }) {
+        res_table_aggregate(where: $where) {
             aggregate {
                 totalCount: count
             }
+        }
+    }
+`;
+
+export const GET_TABLE_QR_CODE = gql`
+    query getTableQrCode($table_id: Int!) {
+        tableQrCode(table_id: $table_id) {
+            url
         }
     }
 `;

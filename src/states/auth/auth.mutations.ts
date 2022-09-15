@@ -36,7 +36,7 @@ function createLogin(authState: ReactiveVar<Auth | null>) {
             user: dummyAccountInfo,
         });
         sessionStorage.setItem(constants.AUTH_KEY, "test-key");
-        history.push("/dashboard");
+        history.push("/welcome");
     };
 }
 
