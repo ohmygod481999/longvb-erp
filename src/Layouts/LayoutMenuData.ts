@@ -3,22 +3,25 @@ import { useHistory } from "react-router-dom";
 
 enum CurrentState {
     Dashboard,
-    Restaurant
+    Restaurant,
 }
 
 export const useNavdata = () => {
     const history = useHistory();
     //state data
     const [isDashboard, setIsDashboard] = useState(false);
+    const [isWellCome, setIsWellCome] = useState(false);
+    
     const [isRestaurant, setIsRestaurant] = useState(false);
     // Restaurant
+    const [isPos, setIsPos] = useState(false)
     const [isStore, setIsStore] = useState(false);
     const [isOrder, setIsOrder] = useState(false);
-    
-    const [isFood, setIsFood] = useState (false)
-    const [isFoodCategory,setIsFoodCategory] = useState(false)
-    const [isFoods, setIsFoods] = useState (false)
-    
+
+    const [isFood, setIsFood] = useState(false);
+    const [isFoodCategory, setIsFoodCategory] = useState(false);
+    const [isFoods, setIsFoods] = useState(false);
+
     const [isTable, setIsTable] = useState(false);
 
     const [isGallery, setIsGallery] = useState(false);
@@ -105,6 +108,21 @@ export const useNavdata = () => {
             stateVariables: isRestaurant,
             subItems: [
                 {
+                    id: "pos",
+                    label: "Bán hàng",
+                    link: "/restaurant/pos",
+                    isChildItem: true,
+                    click: function (e: any) {
+                        e.preventDefault();
+                        setIsPos(!isPos);
+                    },
+                    parentId: "restaurant",
+                    stateVariables: isPos,
+                    childItems: [
+                        { id: 1, label: "Danh sách bàn", link: "/restaurant/pos" },
+                    ]
+                },
+                {
                     id: "store",
                     label: "Chi nhánh",
                     link: "/restaurant/branch",
@@ -129,7 +147,6 @@ export const useNavdata = () => {
                     stateVariables: isStore,
                 },
                 {
-                
                     id: "store",
                     label: "Bàn ăn",
                     link: "/restaurant/table",
@@ -152,32 +169,32 @@ export const useNavdata = () => {
                     },
                     parentId: "restaurant",
                     stateVariables: isFood,
-                    childItems:[
+                    childItems: [
                         {
                             id: "foodCategori",
                             label: "Phân loại món ăn",
                             link: "/restaurant/food/category",
                             isChildItem: false,
-                             click: function (e: any) {
+                            click: function (e: any) {
                                 e.preventDefault();
-                                 setIsFoodCategory(!isFoodCategory);
+                                setIsFoodCategory(!isFoodCategory);
                             },
-                             parentId: "food",
-                             stateVariables: isFoodCategory,
+                            parentId: "food",
+                            stateVariables: isFoodCategory,
                         },
                         {
                             id: "foods",
                             label: "Món ăn",
                             link: "/restaurant/food",
                             isChildItem: false,
-                             click: function (e: any) {
+                            click: function (e: any) {
                                 e.preventDefault();
-                                 setIsFoodCategory(!isFoods);
+                                setIsFoodCategory(!isFoods);
                             },
-                             parentId: "food",
-                             stateVariables: isFoods,
-                        }
-                    ]
+                            parentId: "food",
+                            stateVariables: isFoods,
+                        },
+                    ],
                 },
                 {
                     id: "order",

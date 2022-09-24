@@ -7,6 +7,10 @@ export interface Store {
     created_at: string;
 }
 
+export interface StoreWithRevenue extends Store {
+    revenue: number;
+}
+
 export interface StoresResponse {
     store: Store[];
 }

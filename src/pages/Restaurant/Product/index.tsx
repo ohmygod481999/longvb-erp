@@ -50,7 +50,7 @@ const ListProduct = () => {
         []
     );
 
-    const handleZoneChange = useCallback(
+    const handleCategoryChange = useCallback(
         (values: SingleValue<{ value: number; label: string }> | null) => {
             setSelectedCategory(values);
         },
@@ -203,7 +203,7 @@ const ListProduct = () => {
                                             <Col className="col-lg-3 col-md-4">
                                                 <Select
                                                     value={selectedCategory}
-                                                    onChange={handleZoneChange}
+                                                    onChange={handleCategoryChange}
                                                     placeholder="Loại món"
                                                     options={categoryOptions}
                                                     isClearable

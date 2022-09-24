@@ -65,3 +65,17 @@ export const timeAgo = (date: Date) => {
     const tAgo = new TimeAgo("vi-VN");
     return tAgo.format(date);
 };
+
+export const getFirstDayOfMonth = () => {
+    const date = new Date();
+    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+    return firstDay;
+};
+
+export const getFirstDayOfYear = () => {
+    return new Date(new Date().getFullYear(), 0, 1);
+};
+
+export const getEndDayOfYear = () => {
+    return new Date(new Date().getFullYear(), 11, 31);
+};

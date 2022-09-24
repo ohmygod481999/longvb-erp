@@ -6,7 +6,7 @@ import { recentOrders } from '../../common/data';
 const RecentOrders = () => {
     return (
         <React.Fragment>
-            <Col xl={8}>
+            <Col xl={6}>
                 <Card>
                     <CardHeader className="align-items-center d-flex">
                         <h4 className="card-title mb-0 flex-grow-1">Recent Orders</h4>

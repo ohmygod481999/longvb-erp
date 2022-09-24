@@ -40,3 +40,22 @@ export const GET_TABLE_QR_CODE = gql`
         }
     }
 `;
+
+export const GET_TABLES_WHERE = gql`
+    query getTableWhere($where: res_table_bool_exp!) {
+        res_table(where: $where, order_by: { created_at: desc }) {
+            id
+            name
+            store {
+                id
+                name
+            }
+            res_zone {
+                id
+                name
+                created_at
+            }
+            created_at
+        }
+    }
+`;

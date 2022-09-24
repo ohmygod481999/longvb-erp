@@ -61,6 +61,98 @@ export const GET_ORDERS_PAGINATION = gql`
     }
 `;
 
+export const GET_CREATED_ORDER = gql`
+    query getOrderCreated($company_id: Int!) {
+        order(
+            where: {
+                status: { _eq: "created" }
+                company_id: { _eq: $company_id }
+            }
+        ) {
+            id
+            status
+            order_items {
+                id
+                product {
+                    id
+                    name
+                    thumbnail
+                    description
+                    price
+                    product_category {
+                        id
+                        name
+                    }
+                }
+                quantity
+                created_at
+                updated_at
+            }
+            store {
+                id
+                name
+            }
+            res_table {
+                id
+                name
+            }
+            created_at
+        }
+    }
+`;
+
+const GET_ORDER_DATE_RANGE = gql`
+    query getOrderDateRange(
+        $company_id: Int!
+        $start: timestamptz!
+        $end: timestamptz!
+    ) {
+        order(
+            where: {
+                company_id: { _eq: $company_id }
+                created_at: { _gt: $start, _lt: $end }
+            }
+        ) {
+            order_items {
+                product {
+                    price
+                }
+                quantity
+            }
+            store {
+                id
+                name
+            }
+            created_at
+        }
+    }
+`;
+
+const GET_COUNT_ORDER_DATE_RANGE = gql`
+    query getCountOrderDateRange(
+        $company_id: Int!
+        $start: timestamptz!
+        $end: timestamptz!
+    ) {
+        order_aggregate(
+            where: {
+                company_id: { _eq: $company_id }
+                created_at: { _gt: $start, _lt: $end }
+                status: { _eq: "success" }
+            }
+        ) {
+            aggregate {
+                totalCount: count
+                __typename
+            }
+            __typename
+        }
+    }
+`;
+
 export const orderQueries = {
     GET_ORDERS_PAGINATION,
+    GET_CREATED_ORDER,
+    GET_ORDER_DATE_RANGE,
+    GET_COUNT_ORDER_DATE_RANGE,
 };

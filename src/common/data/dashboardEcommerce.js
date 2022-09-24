@@ -25,7 +25,7 @@ const ecomWidgets = [
         badge: "ri-arrow-right-up-line",
         badgeClass: "success",
         percentage: "+16.24",
-        counter: "559.25",
+        counter: 559.25,
         link: "View net earnings",
         bgcolor: "success",
         icon: "bx bx-dollar-circle",
@@ -40,7 +40,7 @@ const ecomWidgets = [
         badge: "ri-arrow-right-down-line",
         badgeClass: "danger",
         percentage: "-3.57",
-        counter: "36894",
+        counter: 36894,
         link: "View all orders",
         bgcolor: "info",
         icon: "bx bx-shopping-bag",
@@ -56,7 +56,7 @@ const ecomWidgets = [
         badge: "ri-arrow-right-up-line",
         badgeClass: "success",
         percentage: "+29.08",
-        counter: "183.35",
+        counter: 183.35,
         link: "See details",
         bgcolor: "warning",
         icon: "bx bx-user-circle",
@@ -70,7 +70,7 @@ const ecomWidgets = [
         label: "My Balance",
         badgeClass: "muted",
         percentage: "+0.00",
-        counter: "165.89",
+        counter: 165.89,
         link: "Withdraw money",
         bgcolor: "primary",
         icon: "bx bx-wallet",
@@ -308,11 +308,6 @@ const topCategories = [
 // Revenue Chart Data
 const allRevenueData = [
     {
-        name: "Orders",
-        type: "area",
-        data: [34, 65, 46, 68, 49, 61, 42, 44, 78, 52, 63, 67],
-    },
-    {
         name: "Earnings",
         type: "bar",
         data: [
@@ -320,11 +315,16 @@ const allRevenueData = [
             88.51, 36.57,
         ],
     },
-    {
-        name: "Refunds",
-        type: "line",
-        data: [8, 12, 7, 17, 21, 11, 5, 9, 7, 29, 12, 35],
-    },
+    // {
+    //     name: "Orders",
+    //     type: "area",
+    //     data: [34, 65, 46, 68, 49, 61, 42, 44, 78, 52, 63, 67],
+    // },
+    // {
+    //     name: "Refunds",
+    //     type: "line",
+    //     data: [8, 12, 7, 17, 21, 11, 5, 9, 7, 29, 12, 35],
+    // },
 ];
 
 const monthRevenueData = [

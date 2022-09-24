@@ -31,6 +31,7 @@ import EditProduct from "../pages/Restaurant/Product/EditProduct";
 import OrderList from "../pages/Restaurant/Order";
 import Gallery from "../pages/Restaurant/Gallery";
 import WelComePage from "../pages/WelcomePage";
+import Pos from "../pages/Restaurant/Pos";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardEcommerce },
@@ -49,6 +50,8 @@ const authProtectedRoutes = [
 
   { path: "/restaurant/order", component: OrderList },
   { path: "/restaurant/gallery", component: Gallery },
+
+  { path: "/restaurant/pos", component: Pos },
 
   //User Profile
   { path: "/profile", component: UserProfile },

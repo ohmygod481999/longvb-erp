@@ -59,4 +59,5 @@ const GET_PRODUCT_BY_ID = gql`
 
 export const productQueries = {
     GET_PRODUCT_BY_ID,
+    GET_PRODUCT_PAGINATION
 };

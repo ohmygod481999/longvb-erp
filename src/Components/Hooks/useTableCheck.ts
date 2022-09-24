@@ -1,10 +1,14 @@
 import { useCallback, useMemo, useState } from "react";
 
-export const useTableCheck = (allIds: number[]) => {
+export const useTableCheck = (allIds: number[], isMulti = true) => {
     const [checkedIds, setCheckedIds] = useState<number[]>([]);
 
     const check = useCallback(
         (id: number) => {
+            if (!isMulti) {
+                setCheckedIds([id]);
+                return;
+            }
             // id hasn't checked
             if (!checkedIds.includes(id)) {
                 // add id to checkedIds
