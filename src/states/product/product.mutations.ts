@@ -47,6 +47,7 @@ const UPDATE_PRODUCT = gql`
         $thumbnail: String
         $description: String
         $company_id: Int!
+
     ) {
         update_product_by_pk(
             pk_columns: { id: $id }
@@ -69,9 +70,32 @@ const UPDATE_PRODUCT = gql`
         }
     }
 `;
+const UPDATE_STATUS_PRODUCT = gql`
+    mutation updateProduct(
+        $id: Int!
+        $status: product_status_enum!
+        
+    ) {
+        update_product_by_pk(
+            pk_columns: { id: $id }
+            _set: {
+                status: $status
+            }
+        ) {
+            id
+            name
+            price
+            category_id
+            thumbnail
+            description
+            company_id
+        }
+    }
+`;
 
 export const productMutations = {
     DELETE_MULTI_PRODUCT,
     CREATE_PRODUCT,
     UPDATE_PRODUCT,
+    UPDATE_STATUS_PRODUCT
 };
